@@ -5,14 +5,17 @@
 <link rel="stylesheet" href="vendors/fonts/font-awesome.min.css">
 <script src="vendors/js/jquery-3.2.1.min.js"></script>
 <script src="vendors/js/d3.min.js"></script>
-
-<script src="assets/js/fileparser.js"></script>
+<script src="vendors/js/bootstrap.min.js"></script>
 <script src="assets/js/table_creator.js"></script>
+<script src="assets/js/fileparser.js"></script>
 </head>
 <body>
+<input id="search" type="text" width="400" placeholder="Search" />
+<div id="table-container">
+
+</div>
 <script>
-	console.log(parse("data/dados-tp1.csv"))
-	document.write(createTable());
+	parse("data/dados-tp1.csv", createTable);
 </script>
 
 </body>
