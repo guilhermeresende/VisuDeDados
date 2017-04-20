@@ -54,8 +54,12 @@ function createTable(mydata){
 		th.onclick = function (event) {
 			params.sortedCol = j;
 			params.sortReverse = !params.sortReverse;
-			sortData(mydata);
-			createTable(mydata);
+			var newdata=mydata.slice(1,mydata.length);
+			console.log("data");
+			console.log(mydata);
+			console.log(newdata);
+			sortData(newdata);
+			createTable([mydata[0]].concat(newdata));
 		};
 		row.appendChild(th);
     }
@@ -66,10 +70,15 @@ function createTable(mydata){
 }
 
 function sortData (mydata) {
-	console.log(mydata[0][params.sortedCol]);
-	mydata.sort(function (a, b) {
-		return (a[params.sortedCol] < b[params.sortedCol]) ? -1 : 1;
+	mydata.sort(function (a, b) {	
+		if(a[params.sortedCol] < b[params.sortedCol]) {
+		  return -1;
+		}
+		else{
+			return 1;
+		}
 	});
+
 }
 
 function filterData () {
@@ -80,7 +89,7 @@ function filterData () {
 	for (var i = 1; i < params.dataset.length; i++) {
 		var found = false;
 		for (var j = 0; j < params.dataset[i].length; j++) {
-			if(params.dataset[i][j].search(params.search)){
+			if(params.dataset[i][j].search(params.search)>=0){
 				filtered.push(params.dataset[i])
 			}
 		}
