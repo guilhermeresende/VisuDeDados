@@ -79,23 +79,30 @@ function renderTable (dataset) {
     	}
     }
 
-    
-    createTableButtons ();
-    htmlPaginationClear();        
+        var tablePageNumbers = document.createElement('table');
+        table.className += "table table-hover"; 
 
-    insertHtmlPaginationItem("<<", params.firstPage); 
-    insertHtmlPaginationItem("<", params.paginationButtons[0]); 
+        createTableButtons ();
+        var row = table.insertRow(-1);
+        var cell = row.insertCell(-1);
+        cell.innerHTML = ("<<|");
+        cell.onclick = callbackClickPagination(params.firstPage);
+        var cell = row.insertCell(-1);
+        cell.innerHTML = ("<");
+        cell.onclick = callbackClickPagination(params.paginationButtons[0]);
 
-    for (var i in params.paginationButtons) {  
-            var valuePage = params.paginationButtons[i];
-            insertHtmlPaginationItem(valuePage, params.paginationButtons[i]); 
-    }
-
-    insertHtmlPaginationItem(">", valuePage); 
-    insertHtmlPaginationItem(">>", params.lastPage-1);
-
-
-    document.getElementById("pagination_item_"+params.page).setAttribute("class", "active");
+        for (var i in params.paginationButtons) {  
+                var cell = row.insertCell(-1);
+                var valuePage = params.paginationButtons[i];
+                cell.innerHTML = (valuePage);
+                cell.onclick = callbackClickPagination(valuePage);
+        }
+        var cell = row.insertCell(-1);
+        cell.innerHTML = (">");
+        cell.onclick = callbackClickPagination(valuePage);
+        var cell = row.insertCell(-1);
+        cell.innerHTML = ("|>>");
+        cell.onclick = callbackClickPagination(params.lastPage-1);
 
 
     // create header
@@ -112,34 +119,11 @@ function renderTable (dataset) {
     var container = document.getElementById('table-container');
     container.innerHTML = '';
     container.appendChild(table);
-}
 
-function htmlPaginationClear(){
-    var myNode = document.getElementById("pagination1");
-    while (myNode.firstChild) {
-        myNode.removeChild(myNode.firstChild);
-    }
-}
-
-function insertHtmlPaginationItem(visual, value){
-    var paginationDiv = document.getElementById("pagination1");
-    var aTag = document.createElement('a');
-    if (isNaN(visual) )
-        aTag.setAttribute("id", "pagination_item");
-    else
-        aTag.setAttribute("id", "pagination_item_"+value);
-    aTag.innerHTML = visual;
-    paginationDiv.appendChild(aTag);        
-    aTag.onclick = callbackClickPagination(value);
+    container.appendChild(tablePageNumbers);
 
 }
-function callbackClickPagination (j) {
-    return function (event) {
-        params.page = j;
-        params.firstElementPage = j*params.paginationSize;
-        renderTable();
-    };
-}
+
 function createTableButtons () {
         params.paginationButtons = [];
         var size = params.paginationSize; 
@@ -168,7 +152,14 @@ function createTableButtons () {
         params.paginationButtons = newButtons;
     }
 
-
+function callbackClickPagination (j) {
+    return function (event) {
+        params.page = j;
+        params.firstElementPage = j*params.paginationSize;
+        //sortData();
+        renderTable();
+    };
+}
 
 function callbackClickOrderBy (j) {
     return function (event) {
