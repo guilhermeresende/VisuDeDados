@@ -11,23 +11,22 @@ function parse(filename, callback){
 				lines = allText.split("\r");
 				for(var i=0;i<lines.length;i++){
 					var c = lines[i].search("\"")          
-					if (c >= 0){            
-						var n = 0;
-						var res = [];
-						do{                                      //pra fazer com todas as aspas que houverem               
-							 res.push = lines[i].slice(n,c).split(",");          //adicionando parte splitada de n até a aspa
-							 n += c;                               //posicao da ultima aspa (C é dado em funcao da primeira pos do slice)
-							 c = lines[i].slice(n,lines[i].length).search("\"");   //caçando próxima aspa
-							 //ps.: Se tiver duas aspas seguidas acho que da ruim
-						}while(c>=0);
-						sample_data.push(res);
+					if (c >= 0){
+						var secondc = lines[i].slice(c+1,lines[i].length).search("\"") +c+1;
+						var quotedtext = lines[i].slice(c,secondc);
+						quotedtext=quotedtext.replace(",","\\\\\\;");
+						lines[i]=lines[i].slice(0,c)+quotedtext+lines[i].slice(secondc,lines[i].length);
+						var res = lines[i].split(",");
+						for(var j=0;j<res.length;j++){
+							res[j]=res[j].replace("\\\\\\;",",")
+						}						
 					}
 					else{
 						var res = lines[i].split(",");
-						sample_data.push(res);
 					}
+					sample_data.push(res);
 				}
-				console.log("se printar isso aqui, nao tem loop infinito");	
+				//console.log(sample_data)
 				callback(sample_data);
 			}
 		}
