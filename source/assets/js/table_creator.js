@@ -24,20 +24,25 @@ function renderTable (dataset) {
 
     // inicializacao eventos da busca
 	var field = document.getElementById('search');
-	field.onkeydown = function (event) {
-		params.search = field.value;
-		filterData();
-		renderTable();
-	};
-	field.onkeypressed = function (event) {
-		params.search = field.value;
-		filterData();
-		renderTable();
-	};
+	field.onkeypress = function (event) {
+        if (params.search !== field.value) {
+            params.search = field.value.toLowerCase();
+            filterData();
+            renderTable();
+        }
+    };
+    // keydown nao funcionava direito quando ia deletar...
+    field.onkeyup = function (event) {
+        if (params.search !== field.value) {
+            params.search = field.value.toLowerCase();
+            filterData();
+            renderTable();
+        }
+    };
 
 	// Create table
     var table = document.createElement('table');
-    table.className += "table table-hover table-striped"; 
+    table.className += "table table-hover"; 
 
     // create rows
     for (var i = 0; i < params.filtered.length; i++) {
@@ -60,12 +65,8 @@ function renderTable (dataset) {
 		// if (params.sortedCol == j && ) {
 
 		// }
-		th.onclick = function (event) {
-			params.sortedCol = j;
-			params.sortReverse = !params.sortReverse;
-            sortData();
-			createTable();
-		};
+
+		th.onclick = callbackClickOrderBy(j);
 		row.appendChild(th);
     }
 
@@ -74,13 +75,24 @@ function renderTable (dataset) {
     container.appendChild(table);
 }
 
+function callbackClickOrderBy (j) {
+    return function (event) {
+        params.sortedCol = j;
+        params.sortReverse = !params.sortReverse;
+        sortData();
+        renderTable();
+    };
+}
+
 function sortData () {
 	params.filtered.sort(function (a, b) {
 		if(a[params.sortedCol] < b[params.sortedCol]) {
-		  return -1;
+            if (!params.sortReverse) return -1;
+            else return 1;
 		}
-		else{
-			return 1;
+		else {
+			if (!params.sortReverse) return 1;
+            else return -1;
 		}
 	});
 }
@@ -94,7 +106,7 @@ function filterData () {
 	var filtered = [];
 	for (var i = 0; i < params.dataset.length; i++) {
 		for (var j = 0; j < params.dataset[i].length; j++) {
-			if (params.dataset[i][j].search(params.search) >= 0){
+			if (params.dataset[i][j].toLowerCase().search(params.search) >= 0){
 				filtered.push(params.dataset[i]);
                 break;
 			}
