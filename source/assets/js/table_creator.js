@@ -9,57 +9,62 @@ var params = {
 	search: ''
 }
 
-function createTable(mydata){
+function initializeTableData (dataset) {
+    params.header = dataset[0]; // primeira linha
+    params.dataset = dataset.slice(1);
+    params.filtered = dataset.slice(1);
+}
 
-	if (params.dataset === undefined) {
-		params.dataset = mydata;
-	}
+function renderTable (dataset) {
 
+    // se ainda nao tiver inicializado a tabela e o arqgumento nao for indefinido
+    if (params.dataset === undefined && dataset !== undefined) {
+        initializeTableData(dataset);
+    }
+
+    // inicializacao eventos da busca
 	var field = document.getElementById('search');
 	field.onkeydown = function (event) {
 		params.search = field.value;
-		var filtered = filterData();
-		createTable(filtered);
+		filterData();
+		renderTable();
 	};
 	field.onkeypressed = function (event) {
 		params.search = field.value;
-		var filtered = filterData();
-		createTable(filtered);
+		filterData();
+		renderTable();
 	};
 
-	// Create table.
+	// Create table
     var table = document.createElement('table');
     table.className += "table table-hover table-striped"; 
 
     // create rows
-    for (var i = 1; i < mydata.length; i++) {
+    for (var i = 0; i < params.filtered.length; i++) {
 
-    	var row = table.insertRow(i - 1);
+    	var row = table.insertRow(i);
     	// create row cells
-    	for (var j in mydata[i]) {
+    	for (var j in params.filtered[i]) {
     		var cell = row.insertCell(j);
-    		cell.innerHTML = mydata[i][j];
+    		cell.innerHTML = params.filtered[i][j];
     		//cell.setAttribute()
     	}
     }
 
+    // create header
     var header = table.createTHead();
     var row = header.insertRow(0);
-    for (j in mydata[0]) {
+    for (j in params.header) {
     	var th = document.createElement('th');
-		th.innerHTML = mydata[0][j];
+		th.innerHTML = params.header[j];
 		// if (params.sortedCol == j && ) {
 
 		// }
 		th.onclick = function (event) {
 			params.sortedCol = j;
 			params.sortReverse = !params.sortReverse;
-			var newdata=mydata.slice(1,mydata.length);
-			console.log("data");
-			console.log(mydata);
-			console.log(newdata);
-			sortData(newdata);
-			createTable([mydata[0]].concat(newdata));
+            sortData();
+			createTable();
 		};
 		row.appendChild(th);
     }
@@ -69,8 +74,8 @@ function createTable(mydata){
     container.appendChild(table);
 }
 
-function sortData (mydata) {
-	mydata.sort(function (a, b) {	
+function sortData () {
+	params.filtered.sort(function (a, b) {
 		if(a[params.sortedCol] < b[params.sortedCol]) {
 		  return -1;
 		}
@@ -78,22 +83,22 @@ function sortData (mydata) {
 			return 1;
 		}
 	});
-
 }
 
 function filterData () {
-	if (params.search == '')
-		return params.dataset;
+	if (params.search === undefined || params.search == '') {
+        params.filtered = params.dataset;
+        return;
+    }
 
-	var filtered = [params.dataset[0]]; // header
-	for (var i = 1; i < params.dataset.length; i++) {
-		var found = false;
+	var filtered = [];
+	for (var i = 0; i < params.dataset.length; i++) {
 		for (var j = 0; j < params.dataset[i].length; j++) {
-			if(params.dataset[i][j].search(params.search)>=0){
-				filtered.push(params.dataset[i])
+			if (params.dataset[i][j].search(params.search) >= 0){
+				filtered.push(params.dataset[i]);
+                break;
 			}
 		}
 	}
-	return(filtered);
-
+    params.filtered = filtered;
 }
