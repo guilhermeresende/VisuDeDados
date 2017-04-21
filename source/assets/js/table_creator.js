@@ -9,8 +9,27 @@ var params = {
 	search: ''
 }
 
+// redefinindo a funcao fora do escopo de string 
+// só para poder referenciar no array params.colParseFunc
+// definido em initializeTableData
+function toLowerCase (string) {
+    return string.toLowerCase();
+}
+
+function createDateObject (string) {
+    return new Date(string);
+}
+
 function initializeTableData (dataset) {
     params.header = dataset[0]; // primeira linha
+    
+    // funcoes que serao usadas para interpretar os dados 
+    // da tabela quando formos ordenar
+    params.colParseFunc = [
+        toLowerCase, toLowerCase, parseInt, 
+        toLowerCase, toLowerCase, toLowerCase, 
+        createDateObject, parseInt, toLowerCase, toLowerCase
+    ];
     params.dataset = dataset.slice(1);
     params.filtered = dataset.slice(1);
 }
@@ -85,15 +104,37 @@ function callbackClickOrderBy (j) {
 }
 
 function sortData () {
-	params.filtered.sort(function (a, b) {
-		if(a[params.sortedCol] < b[params.sortedCol]) {
+	var colParseFunc = params.colParseFunc[params.sortedCol];
+
+    params.filtered.sort(function (a, b) {
+        var aa = colParseFunc(a[params.sortedCol]);
+        var bb = colParseFunc(b[params.sortedCol]);
+		
+        // se a coluna for de numero e algum dos dois 
+        // for NaN, tem que tratar de forma especial
+        // cada caso. se os dois forem NaN, eles caem
+        // no else dos ifs de quando as células nao
+        // sao inteiros, i.e., return 0
+        if (isNaN(aa) && !isNaN(bb)) {
+            if (!params.sortReverse) return -1;
+            else return 1;
+        } else if (!isNaN(aa) && isNaN(bb)) {
+            if (!params.sortReverse) return 1;
+            else return -1;
+        }
+
+        // caso nao for numero, dai ordena da forma usual
+        if (aa < bb) {
             if (!params.sortReverse) return -1;
             else return 1;
 		}
-		else {
+		else if (aa >  bb) {
 			if (!params.sortReverse) return 1;
             else return -1;
-		}
+		} 
+        else {
+            return 0;
+        }
 	});
 }
 
