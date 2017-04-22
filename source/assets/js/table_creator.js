@@ -88,7 +88,7 @@ function renderTable (dataset) {
 
     for (var i in params.paginationButtons) {  
             var valuePage = params.paginationButtons[i];
-            insertHtmlPaginationItem(valuePage, params.paginationButtons[i]); 
+            insertHtmlPaginationItem(valuePage+1, params.paginationButtons[i]); 
     }
 
     insertHtmlPaginationItem(">", valuePage); 
@@ -141,32 +141,32 @@ function callbackClickPagination (j) {
     };
 }
 function createTableButtons () {
-        params.paginationButtons = [];
-        var size = params.paginationSize; 
-        params.firstPage = 0;
-        params.lastPage = Math.ceil(params.filtered.length / size);
-        var current = params.page;
-        var nButtons = params.nButtons;
-        var offset = Math.ceil(nButtons / 2);
- 
-        var newButtons = [];
-        if (current - offset < 0) {
-            var lower = params.firstPage;
-            var upper = params.nButtons;//(lastPage > nButtons) ? nButtons : lastPage;
-            for (var i = lower; i < upper; i++) {
-                newButtons.push(i);
-            }
-        } else {
-            var lower = params.page - offset+1;
-            var upper = params.page + offset+1;//(lastPage > current + offset) ? current + offset : lastPage;
-            if(upper >= params.lastPage+1)
-                upper = params.lastPage+1;
-            for (var i = lower; i < upper-1; i++) {
-                newButtons.push(i);
-            }
+    params.paginationButtons = [];
+    var size = params.paginationSize; 
+    params.firstPage = 0;
+    params.lastPage = Math.ceil(params.filtered.length / size);
+    var current = params.page;
+    var nButtons = params.nButtons;
+    var offset = Math.ceil(nButtons / 2);
+
+    var newButtons = [];
+    if (current - offset < 0) {
+        var lower = params.firstPage;
+        var upper = params.nButtons;//(lastPage > nButtons) ? nButtons : lastPage;
+        for (var i = lower; i < upper; i++) {
+            newButtons.push(i);
         }
-        params.paginationButtons = newButtons;
+    } else {
+        var lower = params.page - offset+1;
+        var upper = params.page + offset+1;//(lastPage > current + offset) ? current + offset : lastPage;
+        if(upper >= params.lastPage+1)
+            upper = params.lastPage+1;
+        for (var i = lower; i < upper-1; i++) {
+            newButtons.push(i);
+        }
     }
+    params.paginationButtons = newButtons;
+}
 
 
 
