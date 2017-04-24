@@ -85,21 +85,18 @@ function renderTable (dataset) {
     }
     params.nPaginas = params.filtered.length/params.paginationSize;
 
-    if(params.nPaginas <= params.nButtonsMax && params.filtered.length != 0){
-        params.nButtons = params.nPaginas;
-    }
-    else if(params.nPaginas <= params.nButtonsMax && params.filtered.length == 0){
-        params.nButtons = 1;
-    }
-    else{
+    if(params.nPaginas <= params.nButtonsMax && params.filtered.length != 0)
+        params.nButtons = params.nPaginas;    
+    else if(params.nPaginas <= params.nButtonsMax && params.filtered.length == 0)
+        params.nButtons = 1;    
+    else
         params.nButtons = params.nButtonsMax;
-    }
+    
     
     createTableButtons ();
     htmlPaginationClear();        
 
     insertHtmlPaginationItem("<<", params.firstPage); 
-    //insertHtmlPaginationItem("<", params.paginationButtons[0]); 
     insertHtmlPaginationItem("<", params.page-1); 
 
     for (var i in params.paginationButtons) {  
@@ -107,7 +104,6 @@ function renderTable (dataset) {
             insertHtmlPaginationItem(valuePage+1, params.paginationButtons[i]); 
     }
 
-    //insertHtmlPaginationItem(">", valuePage); 
     insertHtmlPaginationItem(">", params.page+1); 
     insertHtmlPaginationItem(">>", params.lastPage-1);
 
@@ -163,10 +159,10 @@ function insertHtmlPaginationItem(visual, value){
 function callbackClickPagination (j) {
     return function (event) {
         if(j < params.nPaginas && j >= 0){
-        params.page = j;
-        params.firstElementPage = j*params.paginationSize;
-        renderTable();
-    }
+            params.page = j;
+            params.firstElementPage = j*params.paginationSize;
+            renderTable();
+        }
     };
 }
 function createTableButtons () {
@@ -259,5 +255,7 @@ function filterData () {
         }
     }
     params.filtered = filtered;
+    params.page = 0;
+    params.firstElementPage = 0;
 
 }
