@@ -1,16 +1,17 @@
 var params = {
-	page: 0,
+    page: 0,
     firstElementPage: 0,
     paginationSize: 10,
     lastPage: 30,
-    nButtons: 7,
-	min: 0,
-	max: 9,
-	size: 10,
-	// data:
-	sortedCol: 0,
-	sortReverse: false,
-	search: ''
+    nButtonsMax: 7,
+    nButtons: 1,
+    min: 0,
+    max: 9,
+    size: 10,
+    // data:
+    sortedCol: 0,
+    sortReverse: false,
+    search: ''
 }
 
 // redefinindo a funcao fora do escopo de string 
@@ -46,8 +47,8 @@ function renderTable (dataset) {
     }
 
     // inicializacao eventos da busca
-	var field = document.getElementById('search');
-	field.onkeypress = function (event) {
+    var field = document.getElementById('search');
+    field.onkeypress = function (event) {
         if (params.search !== field.value) {
             params.search = field.value.toLowerCase();
             filterData();
@@ -63,35 +64,51 @@ function renderTable (dataset) {
         }
     };
 
-	// Create table
+    // Create table
     var table = document.createElement('table');
     table.className += "table table-hover"; 
 
     // create rows
+    var rowCount = 0
     for (var i = 0; i < params.paginationSize; i++){//params.filtered.length; i++) {
 
-    	var row = table.insertRow(i);
-    	// create row cells
-    	for (var j in params.filtered[ i+params.firstElementPage ]) {
-    		var cell = row.insertCell(j);
-    		cell.innerHTML = params.filtered[ i+params.firstElementPage ][j];
-    		//cell.setAttribute()
-    	}
-    }
+        var row = table.insertRow(i);
+        rowCount++;
+        // create row cells
+        for (var j in params.filtered[ i+params.firstElementPage ]) {
+            var cell = row.insertCell(j);
+            cell.innerHTML = params.filtered[ i+params.firstElementPage ][j];
+            //cell.setAttribute()
+        }
 
+    
+    }
+    params.nPaginas = params.filtered.length/params.paginationSize;
+
+    if(params.nPaginas <= params.nButtonsMax && params.filtered.length != 0){
+        params.nButtons = params.nPaginas;
+    }
+    else if(params.nPaginas <= params.nButtonsMax && params.filtered.length == 0){
+        params.nButtons = 1;
+    }
+    else{
+        params.nButtons = params.nButtonsMax;
+    }
     
     createTableButtons ();
     htmlPaginationClear();        
 
     insertHtmlPaginationItem("<<", params.firstPage); 
-    insertHtmlPaginationItem("<", params.paginationButtons[0]); 
+    //insertHtmlPaginationItem("<", params.paginationButtons[0]); 
+    insertHtmlPaginationItem("<", params.page-1); 
 
     for (var i in params.paginationButtons) {  
             var valuePage = params.paginationButtons[i];
             insertHtmlPaginationItem(valuePage+1, params.paginationButtons[i]); 
     }
 
-    insertHtmlPaginationItem(">", valuePage); 
+    //insertHtmlPaginationItem(">", valuePage); 
+    insertHtmlPaginationItem(">", params.page+1); 
     insertHtmlPaginationItem(">>", params.lastPage-1);
 
 
@@ -102,8 +119,8 @@ function renderTable (dataset) {
     var header = table.createTHead();
     var row = header.insertRow(0);
     for (j in params.header) {
-    	var th = document.createElement('th');
-		th.innerHTML = params.header[j];
+        var th = document.createElement('th');
+        th.innerHTML = params.header[j];
 
         // adiciona icone para deixar evidente a coluna ordenada
         // e se ascendente
@@ -115,8 +132,8 @@ function renderTable (dataset) {
             }
         }
 
-		th.onclick = callbackClickOrderBy(j);
-		row.appendChild(th);
+        th.onclick = callbackClickOrderBy(j);
+        row.appendChild(th);
     }
 
     var container = document.getElementById('table-container');
@@ -145,9 +162,11 @@ function insertHtmlPaginationItem(visual, value){
 }
 function callbackClickPagination (j) {
     return function (event) {
+        if(j < params.nPaginas && j >= 0){
         params.page = j;
         params.firstElementPage = j*params.paginationSize;
         renderTable();
+    }
     };
 }
 function createTableButtons () {
@@ -190,12 +209,12 @@ function callbackClickOrderBy (j) {
 }
 
 function sortData () {
-	var colParseFunc = params.colParseFunc[params.sortedCol];
+    var colParseFunc = params.colParseFunc[params.sortedCol];
 
     params.filtered.sort(function (a, b) {
         var aa = colParseFunc(a[params.sortedCol]);
         var bb = colParseFunc(b[params.sortedCol]);
-		
+        
         // se a coluna for de numero e algum dos dois 
         // for NaN, tem que tratar de forma especial
         // cada caso. se os dois forem NaN, eles caem
@@ -213,31 +232,32 @@ function sortData () {
         if (aa < bb) {
             if (!params.sortReverse) return -1;
             else return 1;
-		}
-		else if (aa >  bb) {
-			if (!params.sortReverse) return 1;
+        }
+        else if (aa >  bb) {
+            if (!params.sortReverse) return 1;
             else return -1;
-		} 
+        } 
         else {
             return 0;
         }
-	});
+    });
 }
 
 function filterData () {
-	if (params.search === undefined || params.search == '') {
+    if (params.search === undefined || params.search == '') {
         params.filtered = params.dataset;
         return;
     }
 
-	var filtered = [];
-	for (var i = 0; i < params.dataset.length; i++) {
-		for (var j = 0; j < params.dataset[i].length; j++) {
-			if (params.dataset[i][j].toLowerCase().search(params.search) >= 0){
-				filtered.push(params.dataset[i]);
+    var filtered = [];
+    for (var i = 0; i < params.dataset.length; i++) {
+        for (var j = 0; j < params.dataset[i].length; j++) {
+            if (params.dataset[i][j].toLowerCase().search(params.search) >= 0){
+                filtered.push(params.dataset[i]);
                 break;
-			}
-		}
-	}
+            }
+        }
+    }
     params.filtered = filtered;
+
 }
