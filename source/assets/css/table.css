@@ -13,7 +13,7 @@
     text-decoration: none;
     transition: background-color .3s;
     border: 1px solid #ddd;
-    margin: 0 4px;
+    /*margin: 0 4px;*/
 }
 
 .pagination a.active {
@@ -23,3 +23,11 @@
 }
 
 .pagination a:hover:not(.active) {background-color: #ddd;}
+
+#filter {
+    padding: 10px 0px;
+}
+
+.icon-sort {
+    margin-left: 5px;
+}

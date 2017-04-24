@@ -2,8 +2,8 @@
 <html>
 <head>
 	<link rel="stylesheet" href="vendors/css/bootstrap.css">
-	<link rel="stylesheet" href="vendors/fonts/font-awesome.min.css">	
-	<link rel="stylesheet" href="assets/css/pagination_items.css">
+	<link rel="stylesheet" href="vendors/css/font-awesome.min.css">	
+	<link rel="stylesheet" href="assets/css/table.css">
 	<script src="vendors/js/jquery-3.2.1.min.js"></script>
 	<script src="vendors/js/d3.min.js"></script>
 	<script src="vendors/js/bootstrap.min.js"></script>
@@ -16,13 +16,13 @@
 <body>
 	
 	<div class="container">
+		<h1>Tabela pesquisável</h1>
 		<div class="row">
-			<div class="input-group">
+			<div class="input-group" id="filter">
 				<span class="input-group-addon">
-					<span class="glyphicon glyphicon-search"></span>
+					<i class="fa fa-search"></i>
 				</span>
 				<input type="text" class="form-control" id="search" placeholder="Pesquisar">
-				
 			</div>
 			<div id="table-container">
 			

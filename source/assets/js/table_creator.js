@@ -105,6 +105,16 @@ function renderTable (dataset) {
     	var th = document.createElement('th');
 		th.innerHTML = params.header[j];
 
+        // adiciona icone para deixar evidente a coluna ordenada
+        // e se ascendente
+        if (params.sortedCol == j) {
+            if (params.sortReverse) {
+                th.innerHTML += '<i class="fa fa-angle-down icon-sort"></i>';
+            } else {
+                th.innerHTML += '<i class="fa fa-angle-up icon-sort"></i>';
+            }
+        }
+
 		th.onclick = callbackClickOrderBy(j);
 		row.appendChild(th);
     }
