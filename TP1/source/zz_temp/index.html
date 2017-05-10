@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="vendors/css/bootstrap.css">
+	<link rel="stylesheet" href="vendors/fonts/font-awesome.min.css">
+	<script src="vendors/js/jquery-3.2.1.min.js"></script>
+	<script src="vendors/js/d3.min.js"></script>
+	<script src="vendors/js/bootstrap.min.js"></script>
+	<script src="assets/js/table_creator.js"></script>
+	<script src="assets/js/fileparser.js"></script>
+
+</head>
+<body>
+	
+	<div class="container">
+		<div class="row">
+			<div class="input-group">
+				<span class="input-group-addon">
+					<span class="glyphicon glyphicon-search"></span>
+				</span>
+				<input type="text" class="form-control" id="search" placeholder="Pesquisar">
+				
+			</div>
+			<div id="table-container">
+			
+			</div>
+		</div>
+	</div>
+	<script>
+		parse("data/dados-tp1.csv", renderTable);
+	</script>
+
+	</body>
+</html>
