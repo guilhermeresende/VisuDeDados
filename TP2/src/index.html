@@ -14,29 +14,77 @@
 <body>
 
  <script>
- 	parsecsv("data/data.csv");
-	parsejson("data/countries.json");
 
-	//Width and height
-	var w = 500;
-	var h = 50;
-	var svg = d3.select("body")
-        .append("svg")
-        .attr("width", w)   // <-- Here
-        .attr("height", h); // <-- and here!
-	
-	var dataset = [ 5, 10, 15, 20, 25 ];
-	var circles = svg.selectAll("circle")
-         .data(dataset)
-         .enter()
-         .append("circle");
-	circles.attr("cx", function(d, i) {
-            return (i * 50) + 25;
-        })
-       .attr("cy", h/2)
-       .attr("r", function(d) {
-            return d;
-       });
+var svgContainer = d3.select("body").append("svg")
+                                     .attr("width", 1000)
+                                     .attr("height", 1000);
+ 
+function createPeduncle( x0, y0, x0Fl, y0Fl){
+
+var line1 = svgContainer.append("line")
+                          .attr("x1", x0)
+                          .attr("y1", y0)
+                          .attr("x2", x0Fl)
+                          .attr("y2", y0Fl)
+                          .attr("stroke-width", 4)
+                          .attr("stroke", "#14320d");
+}
+
+
+function createPetal(x0, y0, v, rotation, color){
+
+var line1 = svgContainer.append("line")
+                          .attr("x1", x0)
+                          .attr("y1", y0)
+                          .attr("x2", x0+v)
+                          .attr("y2", y0)
+                          .attr("stroke-width", 8)
+                          .attr("stroke", color)
+                          .attr("transform", "rotate( "+rotation+" "+x0+" "+y0+")");
+
+}
+
+function createFlower(name, data, v, x0, y0, x0Fl, y0Fl){
+	var auxSz = 5;
+	createPeduncle(x0, y0, x0Fl, y0Fl);
+
+	createPetal(x0Fl, y0Fl, v*data[0], 2, '#4c9479');
+	createPetal(x0Fl, y0Fl, v*data[1], 35, '#4c94bb');
+	createPetal(x0Fl, y0Fl, v*data[2], 68, '#0004a0');
+	createPetal(x0Fl, y0Fl, v*data[3], 101, '#a84550');
+	createPetal(x0Fl, y0Fl, v*data[4], 134, '#7ab536');
+	createPetal(x0Fl, y0Fl, v*data[5], 167, '#13ad33');
+	createPetal(x0Fl, y0Fl, v*data[6], 200, '#debe1a');
+	createPetal(x0Fl, y0Fl, v*data[7], 233, '#774998');
+	createPetal(x0Fl, y0Fl, v*data[8], 266, '#df390f');
+	createPetal(x0Fl, y0Fl, v*data[9], 299, '#39372a');
+	createPetal(x0Fl, y0Fl, v*data[10], 332, '#5f0202');
+
+	var circle = svgContainer.append("circle")
+                         .attr("cx", x0Fl)
+                         .attr("cy", y0Fl)
+                         .attr("stroke-width", 3)
+                         .attr("fill", "#b4a702")
+                         .attr("stroke", "#e3ef02")
+                         .attr("r", auxSz);
+
+    var svgText = svgContainer.append("text").attr("x",-auxSz).attr("y",y0Fl-6)
+    			.text(name)
+                .attr("transform", "rotate( 270 "+x0Fl+" "+y0Fl+")")
+    			.attr("font-size","20px");
+}
+
+var flowerCenterX = 200; //deslocamento horizontal da flor
+var flowerCenterY = 200; //altura da flor
+
+var flowerPositionY0 = 500; 
+var value = 60;
+
+var dataset = [ 0.754861644,0.282924351,0.730612072,0.815217089,0.897851143,0.932635856,0.894405941844581,0.377191033,0.947379707317073,0.661864705,0.511786365 ];
+
+createFlower("name da flor", dataset, value, flowerCenterX, flowerPositionY0, flowerCenterX, flowerCenterY);
+
+
 </script>
 
 
