@@ -15,6 +15,7 @@ function parsecsv(filename){
 		}
 	}
 	rawFile.send(null);
+  return resultdata;
  }
 
 function parsejson(filename){	
@@ -31,4 +32,5 @@ function parsejson(filename){
 		}
 	}
 	rawFile.send(null);
+  return resultcountries;
 }
