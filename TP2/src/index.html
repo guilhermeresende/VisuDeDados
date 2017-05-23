@@ -120,7 +120,7 @@ function createFlower(name, data, v, sz, x0, y0, x0Fl, y0Fl){
                          .attr("stroke", "#e3ef02")
                          .attr("r", sz);
                          
-    var svgText = svgContainer.append("text").attr("x",x0Fl-(sz*sz*sz+20)).attr("y",y0Fl-6)
+    var svgText = svgContainer.append("text").attr("x",x0Fl-(sz*sz*sz+100)).attr("y",y0Fl-6)
     .attr("onmousemove", "ShowTooltip(evt, '"+name+"')" )
 	.attr("onmouseout", "HideTooltip(evt)" )
 		.text(name)
@@ -140,25 +140,25 @@ var flowerCenterX = 40; //deslocamento horizontal da flor
 var flowerCenterY = 400; //altura da flor
 
 var value = 35;
-var petlSize = 4;
+var petlSize = 3;
 var distance = 40;
 
 //createFlower("name da flor", dataset, value, flowerCenterX, flowerPositionY0, flowerCenterX, flowerCenterY);
-
-parsecsv("data/data.csv", function(data){
-  
+parseeverything("data/countries.json","data/data.csv", function(datajson,data){
+  var initindex=0;
   for (i = 0; i < data.length; i++) {     
     height = average(data[i]);
     //NAME DEVE SER O RETORNO DE UMA FUNCAO QUE ACHA O NOME (NO ARQUIVO DE PAISES) A PARTIR DO CODIGO
-    name = data[i]['country'];
+    for (j=initindex; j<datajson.length;j++){
+    	if (datajson[j]['code']==data[i]['country']){
+    		name=datajson[j]['pt'];
+    		initindex=j+1;
+    	}
+    }
     createFlower(name, data[i], value, petlSize, flowerCenterX+(i*distance), flowerCenterY, flowerCenterX+(i*distance), flowerCenterY*(1-height));
   }
   
 });
-
-
-
-
 
 </script>
 
