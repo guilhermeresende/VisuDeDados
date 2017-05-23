@@ -10,7 +10,7 @@ function parsecsv(filename, func){
 				var allText = rawFile.responseText;
 				var resultdata= d3.csvParse(allText);	
 				//console.log(resultdata);
-				func(resultdata[0]);		
+				func(resultdata);		
 			}
 		}
 	}
