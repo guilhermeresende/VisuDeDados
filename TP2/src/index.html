@@ -16,76 +16,147 @@
  <script>
 
 var svgContainer = d3.select("body").append("svg")
-                                     .attr("width", 1000)
-                                     .attr("height", 1000);
+                                     .attr("opacity", 0.8)
+                                     .attr("width", "100%")
+                                     .attr("height", 500);
+                                     
+//------------------------------------                                     
+           /*                          
+svgContainer.append("rect")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("fill", "pink");
+    */
+
+var tooltip_bg = svgContainer.append("rect")
+      .attr("x",50).attr("y", 50)
+      .attr("rx", 5).attr("ry", 5)
+      .attr("id", "tooltip_bg")
+      .attr("width", 50).attr("height", 16)
+      .attr("fill", "black")
+      .attr("stroke", "black")
+      .attr("stroke-width", "1")
+      .attr("visibility", "hidden");
+      
+
+var tooltip = svgContainer.append("text")
+	.attr("x",50).attr("y",50)
+	.attr("id", "tooltip")
+	.attr("visibility", "hidden")
+	.text("TOOOOLS")
+	.attr("font-family","sans-serif")
+	.attr("font-size",12);
+	
+
+function ShowTooltip(evt, name){
+
+  tooltip.attr("x",evt.clientX-8);
+  tooltip.attr("y",evt.clientY-5);
+  tooltip.text = name;
+  tooltip.attr("visibility","visible");
+  
+  tooltip_bg.attr("x",evt.clientX+8);
+  tooltip_bg.attr("y",evt.clientY+16);
+  tooltip_bg.attr("visibility","visible");
+
+}
+
+function HideTooltip(){
+  tooltip.attr("visibility","hidden");
+  tooltip_bg.attr("visibility","hidden");
+}
+
+//--------------------------------------
  
-function createPeduncle( x0, y0, x0Fl, y0Fl){
+function createPeduncle( x0, y0, x0Fl, y0Fl, sz){
 
 var line1 = svgContainer.append("line")
                           .attr("x1", x0)
                           .attr("y1", y0)
                           .attr("x2", x0Fl)
                           .attr("y2", y0Fl)
-                          .attr("stroke-width", 4)
+                          .attr("stroke-width", sz/2)
                           .attr("stroke", "#14320d");
 }
 
 
-function createPetal(x0, y0, v, rotation, color){
+function createPetal(x0, y0, v, rotation, color, sz){
 
 var line1 = svgContainer.append("line")
                           .attr("x1", x0)
                           .attr("y1", y0)
                           .attr("x2", x0+v)
                           .attr("y2", y0)
-                          .attr("stroke-width", 8)
+                          .attr("stroke-width", sz)
                           .attr("stroke", color)
                           .attr("transform", "rotate( "+rotation+" "+x0+" "+y0+")");
 
 }
 
-function createFlower(data, v, x0, y0, x0Fl, y0Fl){
-	var auxSz = 5;
-	createPeduncle(x0, y0, x0Fl, y0Fl);
+function createFlower(name, data, v, sz, x0, y0, x0Fl, y0Fl){
 
-	createPetal(x0Fl, y0Fl, v*data['civic engagement'], 2, '#4c9479');
-	createPetal(x0Fl, y0Fl, v*data['community'], 35, '#4c94bb');
-	createPetal(x0Fl, y0Fl, v*data['education'], 68, '#0004a0');
-	createPetal(x0Fl, y0Fl, v*data['environment'], 101, '#a84550');
-	createPetal(x0Fl, y0Fl, v*data['health'], 134, '#7ab536');
-	createPetal(x0Fl, y0Fl, v*data['housing'], 167, '#13ad33');
-	createPetal(x0Fl, y0Fl, v*data['income'], 200, '#debe1a');
-	createPetal(x0Fl, y0Fl, v*data['jobs'], 233, '#774998');
-	createPetal(x0Fl, y0Fl, v*data['life satisfaction'], 266, '#df390f');
-	createPetal(x0Fl, y0Fl, v*data['safety'], 299, '#39372a');
-	createPetal(x0Fl, y0Fl, v*data['work-life balance'], 332, '#5f0202');
+	createPeduncle(x0, y0, x0Fl, y0Fl, sz);
+
+	createPetal(x0Fl, y0Fl, v*data['civic engagement'], 2, '#4c9479', sz);
+	createPetal(x0Fl, y0Fl, v*data['community'], 35, '#4c94bb', sz);
+	createPetal(x0Fl, y0Fl, v*data['education'], 68, '#0004a0', sz);
+	createPetal(x0Fl, y0Fl, v*data['environment'], 101, '#a84550', sz);
+	createPetal(x0Fl, y0Fl, v*data['health'], 134, '#7ab536', sz);
+	createPetal(x0Fl, y0Fl, v*data['housing'], 167, '#13ad33', sz);
+	createPetal(x0Fl, y0Fl, v*data['income'], 200, '#debe1a', sz);
+	createPetal(x0Fl, y0Fl, v*data['jobs'], 233, '#774998', sz);
+	createPetal(x0Fl, y0Fl, v*data['life satisfaction'], 266, '#df390f', sz);
+	createPetal(x0Fl, y0Fl, v*data['safety'], 299, '#39372a', sz);
+	createPetal(x0Fl, y0Fl, v*data['work-life balance'], 332, '#5f0202', sz);
 
 	var circle = svgContainer.append("circle")
+	
+	
                          .attr("cx", x0Fl)
                          .attr("cy", y0Fl)
-                         .attr("stroke-width", 3)
+                         .attr("class", "flower_")
+                         .attr("stroke-width", sz/3)
                          .attr("fill", "#b4a702")
                          .attr("stroke", "#e3ef02")
-                         .attr("r", auxSz);
-
-    var svgText = svgContainer.append("text").attr("x",-auxSz).attr("y",y0Fl-6)
-    			.text(data['country'])
+                         .attr("r", sz);
+                         
+    var svgText = svgContainer.append("text").attr("x",x0Fl-(sz*sz*sz+20)).attr("y",y0Fl-6)
+    .attr("onmousemove", "ShowTooltip(evt, '"+name+"')" )
+	.attr("onmouseout", "HideTooltip(evt)" )
+		.text(name)
+                .attr("class", "flower_")		
                 .attr("transform", "rotate( 270 "+x0Fl+" "+y0Fl+")")
-    			.attr("font-size","20px");
+    			.attr("font-size"," "+(sz)+ " px");
 }
 
-var flowerCenterX = 200; //deslocamento horizontal da flor
-var flowerCenterY = 200; //altura da flor
+function average(data){
+  sum = parseFloat(data['civic engagement'])+parseFloat(data['community'])+parseFloat(data['education'])+parseFloat(data['environment'])+parseFloat(data['health'])+parseFloat(data['housing'])+
+	    parseFloat(data['income'])+parseFloat(data['jobs'])+parseFloat(data['life satisfaction'])+parseFloat(data['safety'])+parseFloat(data['work-life balance']);
+	    
+  return sum/11.0;
+}
 
-var flowerPositionY0 = 500; 
-var value = 60;
+var flowerCenterX = 40; //deslocamento horizontal da flor
+var flowerCenterY = 400; //altura da flor
 
-var dataset = [ 0.754861644,0.282924351,0.730612072,0.815217089,0.897851143,0.932635856,0.894405941844581,0.377191033,0.947379707317073,0.661864705,0.511786365 ];
-
+var value = 35;
+var petlSize = 4;
+var distance = 40;
 
 //createFlower("name da flor", dataset, value, flowerCenterX, flowerPositionY0, flowerCenterX, flowerCenterY);
+
 parsecsv("data/data.csv", function(data){
-  createFlower(data, value, flowerCenterX, flowerPositionY0, flowerCenterX, flowerCenterY);});
+  
+  for (i = 0; i < data.length; i++) {     
+    height = average(data[i]);
+    //NAME DEVE SER O RETORNO DE UMA FUNCAO QUE ACHA O NOME (NO ARQUIVO DE PAISES) A PARTIR DO CODIGO
+    name = data[i]['country'];
+    createFlower(name, data[i], value, petlSize, flowerCenterX+(i*distance), flowerCenterY, flowerCenterX+(i*distance), flowerCenterY*(1-height));
+  }
+  
+});
+
+
 
 
 
