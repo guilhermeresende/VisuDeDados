@@ -15,9 +15,10 @@
 
  <script>
 
-var svgContainer = d3.select("body").append("svg")
+
+var svgContainer = d3.select('body').append("svg")
                                      .attr("opacity", 0.8)
-                                     .attr("width", "100%")
+                                     .attr("width", 1620)
                                      .attr("height", 500);
                                      
 //------------------------------------                                     
@@ -48,15 +49,14 @@ var tooltip = svgContainer.append("text")
 	.attr("font-size",12);
 	
 
-function ShowTooltip(evt, name){
+function ShowTooltip(evt, name, data){
 
   tooltip.attr("x",evt.clientX-8);
   tooltip.attr("y",evt.clientY-5);
-  tooltip.text = name;
   tooltip.attr("visibility","visible");
   
-  tooltip_bg.attr("x",evt.clientX+8);
-  tooltip_bg.attr("y",evt.clientY+16);
+  tooltip_bg.attr("x",evt.clientX-8);
+  tooltip_bg.attr("y",evt.clientY-5);
   tooltip_bg.attr("visibility","visible");
 
 }
@@ -89,7 +89,8 @@ var line1 = svgContainer.append("line")
                           .attr("y2", y0)
                           .attr("stroke-width", sz)
                           .attr("stroke", color)
-                          .attr("transform", "rotate( "+rotation+" "+x0+" "+y0+")");
+                          .attr("transform", "rotate( "+rotation+" "+x0+" "+y0+")")
+                          .attr("class","petal");
 
 }
 
@@ -109,20 +110,20 @@ function createFlower(name, data, v, sz, x0, y0, x0Fl, y0Fl){
 	createPetal(x0Fl, y0Fl, v*data['safety'], 299, '#39372a', sz);
 	createPetal(x0Fl, y0Fl, v*data['work-life balance'], 332, '#5f0202', sz);
 
-	var circle = svgContainer.append("circle")
-	
-	
+
+	var circle = svgContainer.append("circle")	
                          .attr("cx", x0Fl)
                          .attr("cy", y0Fl)
                          .attr("class", "flower_")
-                         .attr("stroke-width", sz/3)
+                         .attr("stroke-width", sz/2)
                          .attr("fill", "#b4a702")
                          .attr("stroke", "#e3ef02")
-                         .attr("r", sz);
+                         .attr("r", sz)
+                         .attr("onmousemove", "ShowTooltip(evt, '"+name+"')")
+						 .attr("onmouseout", "HideTooltip(evt)" );
                          
-    var svgText = svgContainer.append("text").attr("x",x0Fl-(sz*sz*sz+100)).attr("y",y0Fl-6)
-    .attr("onmousemove", "ShowTooltip(evt, '"+name+"')" )
-	.attr("onmouseout", "HideTooltip(evt)" )
+
+    var svgText = svgContainer.append("text").attr("x",x0Fl-(name.length*3+60)).attr("y",y0Fl-6)
 		.text(name)
                 .attr("class", "flower_")		
                 .attr("transform", "rotate( 270 "+x0Fl+" "+y0Fl+")")
