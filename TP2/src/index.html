@@ -44,21 +44,21 @@ var line1 = svgContainer.append("line")
 
 }
 
-function createFlower(name, data, v, x0, y0, x0Fl, y0Fl){
+function createFlower(data, v, x0, y0, x0Fl, y0Fl){
 	var auxSz = 5;
 	createPeduncle(x0, y0, x0Fl, y0Fl);
 
-	createPetal(x0Fl, y0Fl, v*data[0], 2, '#4c9479');
-	createPetal(x0Fl, y0Fl, v*data[1], 35, '#4c94bb');
-	createPetal(x0Fl, y0Fl, v*data[2], 68, '#0004a0');
-	createPetal(x0Fl, y0Fl, v*data[3], 101, '#a84550');
-	createPetal(x0Fl, y0Fl, v*data[4], 134, '#7ab536');
-	createPetal(x0Fl, y0Fl, v*data[5], 167, '#13ad33');
-	createPetal(x0Fl, y0Fl, v*data[6], 200, '#debe1a');
-	createPetal(x0Fl, y0Fl, v*data[7], 233, '#774998');
-	createPetal(x0Fl, y0Fl, v*data[8], 266, '#df390f');
-	createPetal(x0Fl, y0Fl, v*data[9], 299, '#39372a');
-	createPetal(x0Fl, y0Fl, v*data[10], 332, '#5f0202');
+	createPetal(x0Fl, y0Fl, v*data['civic engagement'], 2, '#4c9479');
+	createPetal(x0Fl, y0Fl, v*data['community'], 35, '#4c94bb');
+	createPetal(x0Fl, y0Fl, v*data['education'], 68, '#0004a0');
+	createPetal(x0Fl, y0Fl, v*data['environment'], 101, '#a84550');
+	createPetal(x0Fl, y0Fl, v*data['health'], 134, '#7ab536');
+	createPetal(x0Fl, y0Fl, v*data['housing'], 167, '#13ad33');
+	createPetal(x0Fl, y0Fl, v*data['income'], 200, '#debe1a');
+	createPetal(x0Fl, y0Fl, v*data['jobs'], 233, '#774998');
+	createPetal(x0Fl, y0Fl, v*data['life satisfaction'], 266, '#df390f');
+	createPetal(x0Fl, y0Fl, v*data['safety'], 299, '#39372a');
+	createPetal(x0Fl, y0Fl, v*data['work-life balance'], 332, '#5f0202');
 
 	var circle = svgContainer.append("circle")
                          .attr("cx", x0Fl)
@@ -69,7 +69,7 @@ function createFlower(name, data, v, x0, y0, x0Fl, y0Fl){
                          .attr("r", auxSz);
 
     var svgText = svgContainer.append("text").attr("x",-auxSz).attr("y",y0Fl-6)
-    			.text(name)
+    			.text(data['country'])
                 .attr("transform", "rotate( 270 "+x0Fl+" "+y0Fl+")")
     			.attr("font-size","20px");
 }
@@ -82,7 +82,11 @@ var value = 60;
 
 var dataset = [ 0.754861644,0.282924351,0.730612072,0.815217089,0.897851143,0.932635856,0.894405941844581,0.377191033,0.947379707317073,0.661864705,0.511786365 ];
 
-createFlower("name da flor", dataset, value, flowerCenterX, flowerPositionY0, flowerCenterX, flowerCenterY);
+
+//createFlower("name da flor", dataset, value, flowerCenterX, flowerPositionY0, flowerCenterX, flowerCenterY);
+parsecsv("data/data.csv", function(data){
+  createFlower(data, value, flowerCenterX, flowerPositionY0, flowerCenterX, flowerCenterY);});
+
 
 
 </script>

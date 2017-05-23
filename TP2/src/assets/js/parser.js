@@ -1,6 +1,6 @@
 
 
-function parsecsv(filename){
+function parsecsv(filename, func){
 
 	var rawFile = new XMLHttpRequest();
 	rawFile.open("GET", filename, true);
@@ -8,14 +8,14 @@ function parsecsv(filename){
 		if(rawFile.readyState === 4){
 			if(rawFile.status === 200 || rawFile.status == 0){
 				var allText = rawFile.responseText;
-				var resultdata=d3.csvParse(allText);
-				console.log(resultdata);
-				console.log("TERMINOU");
+				var resultdata= d3.csvParse(allText);	
+				//console.log(resultdata);
+				func(resultdata[0]);		
 			}
 		}
 	}
 	rawFile.send(null);
-  return resultdata;
+  	//return resultdata;
  }
 
 function parsejson(filename){	
@@ -32,5 +32,5 @@ function parsejson(filename){
 		}
 	}
 	rawFile.send(null);
-  return resultcountries;
+  //return resultcountries;
 }
