@@ -21,7 +21,7 @@ function average (data, keys){
 }
 
 function initChart (id) {
-    setupSVG(id); setupTooltips();
+    setupSVG(id);
     div = d3.select("body").append("div")	
     .attr("class", "tooltip")				
     .style("opacity", 0)
@@ -31,7 +31,7 @@ function initChart (id) {
 function setupSVG (id) {
     svgContainer = d3.select('#'+id).append("svg")
         .attr("opacity", 0.8)
-        .attr("width", 1620)
+        .attr("width", 1700)
         .attr("height", 500);
 }
 
@@ -59,7 +59,7 @@ function drawChart (datajson, data){
 function tooltipText(data){
 	var text="";
 	for (var i=0;i<dataKeys.length;i++){
-		text=text+dataKeys[i]+":&#09;"+parseFloat(data[dataKeys[i]]).toFixed(3)+" <br> ";
+		text=text+"<b>"+dataKeys[i]+":</b>&#09;"+parseFloat(data[dataKeys[i]]).toFixed(2)+" <br> ";
 	}
 	return text;
 
@@ -106,41 +106,6 @@ function setupTooltip () {
         .attr("font-family","sans-serif")
         .attr("font-size",12)
         .attr("class","tooltipao");
-}
-
-function setupTooltipBG () {
-    tooltip_bg = svgContainer.append("rect")
-        .attr("x",50).attr("y", 50)
-        .attr("rx", 5).attr("ry", 5)
-        .attr("id", "tooltip_bg")
-        .attr("width", 50).attr("height", 16)
-        .attr("fill", "black")
-        .attr("stroke", "black")
-        .attr("stroke-width", "1")
-        .attr("visibility", "hidden");
-}
-
-function setupTooltips () {
-    setupTooltipBG(); setupTooltip();
-}
-
-function showTooltip (evt, text) {
-	console.log(text);
-    tooltip.attr("x",evt.clientX-8);
-    tooltip.attr("y",evt.clientY-5);
-    tooltip.attr("visibility","visible");
-    tooltip.style("overflow","visible");
-    tooltip.html(text);
-
-
-    tooltip_bg.attr("x",evt.clientX-8);
-    tooltip_bg.attr("y",evt.clientY-5);
-    tooltip_bg.attr("visibility","visible");
-}
-
-function hideTooltip () {
-    tooltip.attr("visibility","hidden");
-    tooltip_bg.attr("visibility","hidden");
 }
 
 function createPeduncle (x0, y0, x0Fl, y0Fl, sz) {
