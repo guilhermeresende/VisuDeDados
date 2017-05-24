@@ -11,6 +11,7 @@ var dataColors = [ '#4c9479', '#4c94bb', '#0004a0',
     '#a84550', '#7ab536', '#13ad33', '#debe1a',
     '#774998', '#df390f', '#39372a', '#5f0202' ];
 
+var div;
 function average (data, keys){
     var sum = 0.0;
     for (var i in keys) {
@@ -21,6 +22,10 @@ function average (data, keys){
 
 function initChart (id) {
     setupSVG(id); setupTooltips();
+    div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0)
+    .style("z-index",1890);
 }
 
 function setupSVG (id) {
@@ -51,10 +56,21 @@ function drawChart (datajson, data){
     }
 }
 
+function tooltipText(data){
+	var text="";
+	for (var i=0;i<dataKeys.length;i++){
+		text=text+dataKeys[i]+":&#09;"+parseFloat(data[dataKeys[i]]).toFixed(3)+" <br> ";
+	}
+	return text;
+
+}
+
 function createFlower (name, data, v, sz, x0, y0, x0Fl, y0Fl) {
     createPeduncle(x0, y0, x0Fl, y0Fl, sz);
     var greatestBottomPetal = createPetals(data, v, x0Fl, y0Fl, sz);
     createCircle(x0Fl, y0Fl, sz, name);
+    var datatext=tooltipText(data);
+    createInvisibleCircle(x0Fl, y0Fl, sz, datatext);
     createFlowerLabel(x0Fl, y0Fl, 4*sz, name, greatestBottomPetal);
 }
 
@@ -87,9 +103,9 @@ function setupTooltip () {
         .attr("x",50).attr("y",50)
         .attr("id", "tooltip")
         .attr("visibility", "hidden")
-        .text("TOOOOLS")
         .attr("font-family","sans-serif")
-        .attr("font-size",12);
+        .attr("font-size",12)
+        .attr("class","tooltipao");
 }
 
 function setupTooltipBG () {
@@ -108,10 +124,14 @@ function setupTooltips () {
     setupTooltipBG(); setupTooltip();
 }
 
-function showTooltip (evt, name, data) {
+function showTooltip (evt, text) {
+	console.log(text);
     tooltip.attr("x",evt.clientX-8);
     tooltip.attr("y",evt.clientY-5);
     tooltip.attr("visibility","visible");
+    tooltip.style("overflow","visible");
+    tooltip.html(text);
+
 
     tooltip_bg.attr("x",evt.clientX-8);
     tooltip_bg.attr("y",evt.clientY-5);
@@ -153,9 +173,30 @@ function createCircle (x, y, size, name) {
         .attr("stroke-width", size/2)
         .attr("fill", "#b4a702")
         .attr("stroke", "#e3ef02")
-        .attr("r", size)
-        .attr("onmousemove", "showTooltip(evt, '"+name+"')")
-        .attr("onmouseout", "hideTooltip(evt)" );
+        .attr("r", size);
+}
+
+function createInvisibleCircle (x, y, size, text) {
+    var circle = svgContainer.append("circle")
+        .attr("cx", x)
+        .attr("cy", y)
+        .attr("class", "flower_")
+        .attr("opacity",0)
+        .attr("r", size*6.5)
+        .on("mouseover", function(d) {		
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div	.html(text)	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+            })					
+        .on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        });
+
 }
 
 function createFlowerLabel (x, y, size, name, greatestBottomPetal) {
