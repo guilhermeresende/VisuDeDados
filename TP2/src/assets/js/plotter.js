@@ -19,12 +19,12 @@ function average (data, keys){
     return sum / keys.length;
 }
 
-function initChart () {
-    setupSVG(); setupTooltips();
+function initChart (id) {
+    setupSVG(id); setupTooltips();
 }
 
-function setupSVG () {
-    svgContainer = d3.select('body').append("svg")
+function setupSVG (id) {
+    svgContainer = d3.select('#'+id).append("svg")
         .attr("opacity", 0.8)
         .attr("width", 1620)
         .attr("height", 500);

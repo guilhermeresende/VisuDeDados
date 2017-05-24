@@ -3,9 +3,12 @@
 <head>
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 	<meta content="utf-8" http-equiv="encoding">
-	<link rel="stylesheet" href="vendors/css/bootstrap.css">
+	
+    <link rel="stylesheet" href="vendors/css/bootstrap.css">
 	<link rel="stylesheet" href="vendors/css/font-awesome.min.css">	
-	<script src="vendors/js/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="assets/css/index.css">
+	
+    <script src="vendors/js/jquery-3.2.1.min.js"></script>
 	<script src="vendors/js/d3.min.js"></script>
 	<script src="vendors/js/bootstrap.min.js"></script>
 	<script src="assets/js/parser.js"></script>
@@ -13,13 +16,14 @@
 </head>
 
 <body>
-
- <script>
-    initChart();
-    parseEverything("data/countries.json", "data/data.csv", drawChart);
-</script>
-
-
+    <div class="container-fluid">
+        <h1>Índices de países pelo globo</h1>
+        <div id="chart-wrapper"></div>
+    </div>
+    
+    <script type="text/javascript">
+        initChart('chart-wrapper');
+        parseEverything("data/countries.json", "data/data.csv", drawChart);
+    </script>
 </body>
-
 </html>
