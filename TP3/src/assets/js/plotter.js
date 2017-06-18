@@ -170,6 +170,17 @@ function drawPage(parsedFile){
         });
     }
 
+    chartData.sort(function (a, b){
+        if (a.value < b.value) {
+            return -1;
+        }
+        else if (a.value == b.value) {
+            if (a.name < b.name) return -1;
+            else return 1;
+        } 
+        else return 1;
+    });
+
     drawTreeMap(chartData);
     drawChart(chartData, "+");
 
