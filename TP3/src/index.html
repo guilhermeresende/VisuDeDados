@@ -33,17 +33,40 @@
 
 <body>
     <div class="container-fluid">
-        <div class="chart"></div>
-        <div id="chart-wrapper">
-            <div id="viz"></div>
+        <div>
+            <!-- data selection -->
+            <label class="radio-inline"><input type="radio" name="viz-type" value="num_emp">Empregos</label>
+            <label class="radio-inline"><input type="radio" name="viz-type" value="wage">Salário</label>
+            <button class="radio-inline" onclick="updateVisualization()">Gerar visualização</button>
+        </div>
+
+        <div id="greatest-chart"></div>
+        <div id="smallest-chart"></div>
+        <div id="tree-map-container">
+            <div id="tree-map"></div>
         </div>
     </div>
     <script type="text/javascript">
         initChart('chart-wrapper');
-        // parseCSV("data/data2.csv", drawPage);
 
-        // read datasets and call callback function right after
-        readDatasets(drawPage);
+        // read datasets and draw visualizations right after.
+        // defines that it will show employment info first (num_emp).
+        // if you want to change that to wage info, pass 'wage' instead.
+        readDatasets(drawPage, 'num_emp');
+
+        // iterates over radio buttons to see which one is checked.
+        // having the checked button, calls function to draw visualizations again
+        function updateVisualization () {
+            var radio = document.getElementsByName("viz-type");
+            for (var i = 0; i < radio.length; i++) {
+                if (radio[i].checked) {
+                    drawPage(data, radio[i].value); return;
+                }
+            }
+
+            // if has got to here, something is wrong
+            console.log("erro ao atualizar a viz");
+        }
     </script>
 </body>
 </html>

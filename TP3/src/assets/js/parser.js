@@ -8,7 +8,7 @@ function parseCSV (filename, callback) {
 // reads each needed file and checks if
 // the other requests are over. if they are,
 // call function to draw charts
-function readDatasets (callback) {
+function readDatasets (callback, parameter) {
 	var numFilesToRead = 3;
 	var data2result;
 
@@ -24,7 +24,7 @@ function readDatasets (callback) {
 
 		numFilesToRead--;
 		if(numFilesToRead == 0) {
-			callback(data2result);
+			callback(data2result, parameter);
 		}
 	});
 
@@ -40,18 +40,16 @@ function readDatasets (callback) {
 
 		numFilesToRead--;
 		if(numFilesToRead == 0) {
-			callback(data2result);
+			callback(data2result, parameter);
 		}
 	});
 
-
-	// belohorizonte's mesoregion code: 310007
 	d3.csv('data/data2.csv', function (res) {
 		data2result = res;
 
 		numFilesToRead--;
 		if(numFilesToRead == 0) {
-			callback(data2result);
+			callback(data2result, parameter);
 		}
 	});
 }

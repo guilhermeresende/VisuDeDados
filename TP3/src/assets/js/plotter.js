@@ -51,7 +51,7 @@ function fieldSorter(fields) {
             }, 0);
     };
 }
-function drawLines(arr, data){
+function drawLines(arr, data, wrapperId){
     var width = 420;
 
     var x = d3.scale.linear()
@@ -59,7 +59,7 @@ function drawLines(arr, data){
     .range([0, width]);
 
 
-    d3.select(".chart")
+    d3.select("#" + wrapperId)
     .selectAll("div")
     .data(arr)
     .enter().append("div")
@@ -67,7 +67,7 @@ function drawLines(arr, data){
     .text(function(d, i) { return data[i]['name'] + " [" + d + "]"; });
 
 
-    var chart = d3.select(".chart");
+    var chart = d3.select("#" + wrapperId);
     var bar = chart.selectAll("div");
 
     var barUpdate = bar.data(arr);
@@ -76,11 +76,11 @@ function drawLines(arr, data){
     barEnter.text(function(d) { return d; });
 }
 
-function drawChart(data, type){
+function drawBarChart(data, ascending, wrapperId){
 
     var arr = new Array();// = [4, 8, 15, 16, 23, 42];
 
-    if(type == "+"){
+    if(ascending){
         for (i = 0; i < MAX_CHARTS; i++) 
             arr.push( parseInt(data[i]['value']) );
     }
@@ -101,7 +101,7 @@ function drawChart(data, type){
 
     console.log(arr);    
 
-    drawLines(arr, data);
+    drawLines(arr, data, wrapperId);
 }
 
 function drawTreeMap(arr){
@@ -115,7 +115,7 @@ function drawTreeMap(arr){
 //     .draw() 
 
     var visualization = d3plus.viz()
-        .container("#viz") // container DIV to hold the visualization
+        .container("#tree-map") // container DIV to hold the visualization
         .data(arr) // data to use with the visualization
         .type("tree_map") // visualization type
         .id(["group","name"]) // keys. 'group' coming first to make it cluster the squares with same cnae_1
@@ -127,13 +127,17 @@ function drawTreeMap(arr){
 
 // data: variable declared on the top of this file populated in parser.js:readDatabases()
 // key: defines if looking for 'num_emp' or 'wage'
-function drawPage(parsedFile){
+function drawPage(parsedFile, key){
     if (data === undefined) {
         data = parsedFile;
     }
 
-    var key = 'num_emp';
-    console.log(data);
+    // if key wasnt defined, set it to num_emp,
+    // which will be the first visualization seen
+    // when loading the screen for the first time
+    if (key === undefined) {
+        key = 'num_emp';
+    }
     
     var parsedData = {};
 
@@ -173,6 +177,7 @@ function drawPage(parsedFile){
         });
     }
 
+    // by value first, then by name
     chartData.sort(function (a, b){
         if (a.value < b.value) {
             return -1;
@@ -180,37 +185,17 @@ function drawPage(parsedFile){
         else if (a.value == b.value) {
             if (a.name < b.name) return -1;
             else return 1;
-        } 
+        }
         else return 1;
     });
 
     drawTreeMap(chartData);
-    drawChart(chartData, "+");
+    
+    // greatest values
+    drawBarChart(chartData, false, "greatest-chart");
 
-    // var arr = [];
-    // for (i = 0; i < data.length; i++) {
-    //     contains = false;
+    // smallest values
+    drawBarChart(chartData, true, "smallest-chart");
 
-    //     var value = parseInt(data[i][key]);
-    //     if(isNaN(value))
-    //         value = 0;
-    //     var name = data[i]['cnae_3'];
-
-    //     for(j = 0; j < arr.length; j++){
-    //         if(arr[j]['name'] == name){
-    //             arr[j]['value'] += value;
-    //             contains = true;
-    //         }
-    //     }
-
-    //     if(!contains)
-    //         arr.push({"value": value, "name": name});
-            
-    // }
-
-    // arr.sort(fieldSorter(['-value', '-name']));
-
-    // drawTreeMap(arr);
-    // drawChart(arr, "+");
 
 }
