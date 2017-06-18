@@ -5,6 +5,19 @@ var svgContainer,
     tooltip,
     div;
 
+// maps activity id (CNAE) to an object 
+// containing name and HTML color code.
+// for instance:
+// activities["o84"] = {
+//     name: "Atividade administrativa",
+//     color: "#FFFFAA"
+// }
+// same for occupations object.
+// objects are populated in parser.js:readDatasets()
+var activities = {};
+var occupations = {};
+var data;
+
 function initChart (id) {
     setupSVG(id);
     div = d3.select("body").append("div")	
@@ -93,43 +106,97 @@ function drawChart(data, type){
 
 function drawTreeMap(arr){
 
-  var visualization = d3plus.viz()
-    .container("#viz")  // container DIV to hold the visualization
-    .data(arr)  // data to use with the visualization
-    .type("tree_map")   // visualization type
-    .id("name")         // key for which our data is unique on
-    .size("value")      // sizing of blocks
-    .draw() 
+//   var visualization = d3plus.viz()
+//     .container("#viz")  // container DIV to hold the visualization
+//     .data(arr)  // data to use with the visualization
+//     .type("tree_map")   // visualization type
+//     .id("name")         // key for which our data is unique on
+//     .size("value")      // sizing of blocks
+//     .draw() 
+
+    var visualization = d3plus.viz()
+        .container("#viz") // container DIV to hold the visualization
+        .data(arr) // data to use with the visualization
+        .type("tree_map") // visualization type
+        .id(["group","name"]) // keys. 'group' coming first to make it cluster the squares with same cnae_1
+        .depth(1)
+        .size("value")
+        .draw()
 }
 
-function drawPage(data){
-    console.log(data);
-    var arr = new Array();
-
-    for (i = 0; i < data.length; i++) {
-        contains = false;
-
-        //var value = parseInt(data[i]['num_emp']);
-        var value = parseInt(data[i]['num_emp']);
-        if(isNaN(value))
-            value = 0;
-        var name = data[i]['cnae_3'];
-
-        for(j = 0; j < arr.length; j++){
-            if(arr[j]['name'] == name){
-                arr[j]['value'] += value;
-                    contains = true;
-                }
-            }
-
-            if(!contains)
-                arr.push({"value": value, "name": name});
-            
+// data: variable declared on the top of this file populated in parser.js:readDatabases()
+// key: defines if looking for 'num_emp' or 'wage'
+function drawPage(parsedFile){
+    if (data === undefined) {
+        data = parsedFile;
     }
 
-    arr.sort(fieldSorter(['-value', '-name']));
+    var key = 'num_emp';
+    console.log(data);
+    
+    var parsedData = {};
 
-    drawTreeMap(arr);
-    drawChart(arr, "+");
+    // sums up all rows that have the same cnae_3 code
+    for (var i = 0; i < data.length; i++) {
+        var id = data[i]['cnae_3'];
+        var group = data[i]['cnae_1'];
+        if (activities[id] === undefined) {
+            console.log(data[i]);
+        }
+        var name = activities[id].name;
+        var color = activities[id].color;
+        var value = parseInt(data[i][key]);
+        if (isNaN(value)) value = 0;
+        
+        if (parsedData[id] === undefined) {
+            parsedData[id] = {
+                value: value,
+                name: name,
+                group: group
+            }
+        } else {
+            parsedData[id].value += value;
+        }
+    }
+
+    // creating array to feed d3plus
+    var chartData = [];
+    var cnaeKeys = Object.keys(parsedData);
+    for (var i = 0; i < cnaeKeys.length; i++) {
+        chartData.push({
+            "value": parsedData[cnaeKeys[i]].value,
+            "name": parsedData[cnaeKeys[i]].name,
+            "group": parsedData[cnaeKeys[i]].group
+        });
+    }
+
+    drawTreeMap(chartData);
+    drawChart(chartData, "+");
+
+    // var arr = [];
+    // for (i = 0; i < data.length; i++) {
+    //     contains = false;
+
+    //     var value = parseInt(data[i][key]);
+    //     if(isNaN(value))
+    //         value = 0;
+    //     var name = data[i]['cnae_3'];
+
+    //     for(j = 0; j < arr.length; j++){
+    //         if(arr[j]['name'] == name){
+    //             arr[j]['value'] += value;
+    //             contains = true;
+    //         }
+    //     }
+
+    //     if(!contains)
+    //         arr.push({"value": value, "name": name});
+            
+    // }
+
+    // arr.sort(fieldSorter(['-value', '-name']));
+
+    // drawTreeMap(arr);
+    // drawChart(arr, "+");
 
 }

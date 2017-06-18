@@ -33,7 +33,6 @@
 
 <body>
     <div class="container-fluid">
-        <h1>Índices de países pelo globo</h1>
         <div class="chart"></div>
         <div id="chart-wrapper">
             <div id="viz"></div>
@@ -41,7 +40,10 @@
     </div>
     <script type="text/javascript">
         initChart('chart-wrapper');
-        parseCSV("data/data2.csv", drawPage);
+        // parseCSV("data/data2.csv", drawPage);
+
+        // read datasets and call callback function right after
+        readDatasets(drawPage);
     </script>
 </body>
 </html>
