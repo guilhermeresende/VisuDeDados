@@ -121,6 +121,7 @@ function drawTreeMap(arr){
         .id(["group","name"]) // keys. 'group' coming first to make it cluster the squares with same cnae_1
         .depth(1)
         .size("value")
+        .color("color")
         .draw()
 }
 
@@ -152,7 +153,8 @@ function drawPage(parsedFile){
             parsedData[id] = {
                 value: value,
                 name: name,
-                group: group
+                group: group,
+                color: color
             }
         } else {
             parsedData[id].value += value;
@@ -166,7 +168,8 @@ function drawPage(parsedFile){
         chartData.push({
             "value": parsedData[cnaeKeys[i]].value,
             "name": parsedData[cnaeKeys[i]].name,
-            "group": parsedData[cnaeKeys[i]].group
+            "group": parsedData[cnaeKeys[i]].group,
+            "color": parsedData[cnaeKeys[i]].color
         });
     }
 
