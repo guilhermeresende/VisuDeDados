@@ -20,6 +20,10 @@
         h1 {
             text-align: center;
         }
+        #tree-map-container div {
+            height: 400px;
+            width: 900px;
+        }
         .chart div {
             font: 10px sans-serif;
             background-color: steelblue;
@@ -40,8 +44,8 @@
             <button class="radio-inline" onclick="updateVisualization()">Gerar visualização</button>
         </div>
 
-        <div id="greatest-chart"></div>
-        <div id="smallest-chart"></div>
+        <div class="chart" id="greatest-chart"></div><br>
+        <div class="chart" id="smallest-chart"></div>
         <div id="tree-map-container">
             <div id="tree-map"></div>
         </div>

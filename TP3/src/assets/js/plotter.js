@@ -51,7 +51,7 @@ function fieldSorter(fields) {
             }, 0);
     };
 }
-function drawLines(arr, data, wrapperId){
+function drawLines(arr, data, wrapperId, names){
     var width = 420;
 
     var x = d3.scale.linear()
@@ -64,7 +64,7 @@ function drawLines(arr, data, wrapperId){
     .data(arr)
     .enter().append("div")
     .style("width", function(d) { return x(d) + "px"; })
-    .text(function(d, i) { return data[i]['name'] + " [" + d + "]"; });
+    .text(function(d, i) { return names[i] + " [" + d + "]"; });
 
 
     var chart = d3.select("#" + wrapperId);
@@ -76,32 +76,42 @@ function drawLines(arr, data, wrapperId){
     barEnter.text(function(d) { return d; });
 }
 
-function drawBarChart(data, ascending, wrapperId){
-
+function drawBarChart(data, descending, wrapperId){
+console.log(data); 
     var arr = new Array();// = [4, 8, 15, 16, 23, 42];
+    var names = new Array();
 
-    if(ascending){
-        for (i = 0; i < MAX_CHARTS; i++) 
+    if(descending){
+        aval = MAX_CHARTS;
+        for (i = data.length-1; i > 0; i--){
             arr.push( parseInt(data[i]['value']) );
+            names.push( data[i]['name']);
+            aval--;
+            if(aval == 0)
+                    i = 0;
+        }
+        //arr.reverse();
+        console.log(arr); 
     }
     else{
         aval = MAX_CHARTS;
-        for (i = data.length-1; i > 0; i--){
+        for (i = 0; i < data.length; i++){
             if(!isNaN(data[i]['value'])){
                 aval--;
                 //console.log(data[i]['value']);
-                arr.push( parseInt(data[data.length-i-1]['value']) );
+                arr.push( parseInt(data[i]['value']) );
+                names.push( data[i]['name']);
             }
             if(aval == 0)
-                i = 0;
+                i = data.length;
         }
-        arr.sort();
+
 
     }
 
-    console.log(arr);    
+    //console.log(arr);    
 
-    drawLines(arr, data, wrapperId);
+    drawLines(arr, data, wrapperId, names);
 }
 
 function drawTreeMap(arr){
@@ -189,13 +199,14 @@ function drawPage(parsedFile, key){
         else return 1;
     });
 
-    drawTreeMap(chartData);
-    
     // greatest values
-    drawBarChart(chartData, false, "greatest-chart");
+    drawBarChart(chartData, true, "greatest-chart");
 
     // smallest values
-    drawBarChart(chartData, true, "smallest-chart");
+    drawBarChart(chartData, false, "smallest-chart");
+
+    drawTreeMap(chartData);
+    
 
 
 }
