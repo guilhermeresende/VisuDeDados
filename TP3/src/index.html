@@ -68,7 +68,8 @@
     </div>
     <script type="text/javascript">
         initChart('chart-wrapper');
-
+        initRadio();
+        
         // read datasets and draw visualizations right after.
         // defines that it will show employment info first (num_emp).
         // if you want to change that to wage info, pass 'wage' instead.
@@ -86,6 +87,11 @@
 
             // if has got to here, something is wrong
             console.log("erro ao atualizar a viz");
+        }
+
+        function initRadio () {
+            var radio = document.getElementsByName("viz-type");
+            radio[0].checked = true;
         }
     </script>
 </body>
