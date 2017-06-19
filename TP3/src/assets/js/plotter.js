@@ -54,6 +54,8 @@ function fieldSorter(fields) {
 function drawLines(arr, data, wrapperId, names){
     var width = 420;
 
+    document.getElementById(wrapperId).innerHTML = "";
+
     var x = d3.scale.linear()
     .domain([0, d3.max(arr)])
     .range([0, width]);
@@ -77,7 +79,6 @@ function drawLines(arr, data, wrapperId, names){
 }
 
 function drawBarChart(data, descending, wrapperId){
-console.log(data); 
     var arr = new Array();// = [4, 8, 15, 16, 23, 42];
     var names = new Array();
 
@@ -91,7 +92,6 @@ console.log(data);
                     i = 0;
         }
         //arr.reverse();
-        console.log(arr); 
     }
     else{
         aval = MAX_CHARTS;
@@ -99,14 +99,12 @@ console.log(data);
             if(!isNaN(data[i]['value'])){
                 aval--;
                 //console.log(data[i]['value']);
-                arr.push( parseInt(data[i]['value']) );
+                arr.push( Math.abs(parseInt(data[i]['value'])) );
                 names.push( data[i]['name']);
             }
             if(aval == 0)
                 i = data.length;
         }
-
-
     }
 
     //console.log(arr);    
@@ -114,7 +112,21 @@ console.log(data);
     drawLines(arr, data, wrapperId, names);
 }
 
+function drawGrowthChart (data, descending, wrapperId) {
+    var newData = [];
+    for (var i = 0; i < data.length; i++) {
+        newData.push({
+            value: data[i].growth,
+            name: data[i].name
+        });
+    }
+    drawBarChart(newData, descending, wrapperId);
+}
+
+
 function drawTreeMap(arr){
+
+    document.getElementById("tree-map").innerHTML = "";
 
 //   var visualization = d3plus.viz()
 //     .container("#viz")  // container DIV to hold the visualization
@@ -155,20 +167,21 @@ function drawPage(parsedFile, key){
     for (var i = 0; i < data.length; i++) {
         var id = data[i]['cnae_3'];
         var group = data[i]['cnae_1'];
-        if (activities[id] === undefined) {
-            console.log(data[i]);
-        }
         var name = activities[id].name;
         var color = activities[id].color;
-        var value = parseInt(data[i][key]);
+        var growth = parseFloat(data[i][key+'_growth_5']);
+        var value = parseFloat(data[i][key]);
         if (isNaN(value)) value = 0;
+        if (isNaN(growth)) growth = 0;
+        growth *= 100;
         
         if (parsedData[id] === undefined) {
             parsedData[id] = {
                 value: value,
                 name: name,
                 group: group,
-                color: color
+                color: color,
+                growth: growth
             }
         } else {
             parsedData[id].value += value;
@@ -183,7 +196,8 @@ function drawPage(parsedFile, key){
             "value": parsedData[cnaeKeys[i]].value,
             "name": parsedData[cnaeKeys[i]].name,
             "group": parsedData[cnaeKeys[i]].group,
-            "color": parsedData[cnaeKeys[i]].color
+            "color": parsedData[cnaeKeys[i]].color,
+            "growth": parsedData[cnaeKeys[i]].growth
         });
     }
 
@@ -201,12 +215,26 @@ function drawPage(parsedFile, key){
 
     // greatest values
     drawBarChart(chartData, true, "greatest-chart");
-
     // smallest values
     drawBarChart(chartData, false, "smallest-chart");
-
     drawTreeMap(chartData);
-    
 
+    // ordena por growth
+    filteredChartData = chartData.filter(function(item){return true});
+    filteredChartData.sort(function (a, b){
+        if (a.growth < b.growth) {
+            return -1;
+        }
+        else if (a.growth == b.growth) {
+            if (a.name < b.name) return -1;
+            else return 1;
+        }
+        else return 1;
+    });
+
+    // growth
+    drawGrowthChart(filteredChartData, true, "growth-chart");
+    // decrease
+    drawGrowthChart(filteredChartData, false, "decrease-chart");
 
 }
