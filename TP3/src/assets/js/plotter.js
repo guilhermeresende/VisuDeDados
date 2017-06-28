@@ -129,22 +129,21 @@ function drawTreeMap(arr){
     document.getElementById("tree-map").innerHTML = "";
 
 //   var visualization = d3plus.viz()
-//     .container("#viz")  // container DIV to hold the visualization
-//     .data(arr)  // data to use with the visualization
-//     .type("tree_map")   // visualization type
-//     .id("name")         // key for which our data is unique on
-//     .size("value")      // sizing of blocks
-//     .draw() 
+    var tree = {
+        name: "tree",
+        children: [
+            { name: "Word-wrapping comes for free in HTML", size: 16000 },
+            { name: "animate makes things fun", size: 8000 },
+            { name: "data data everywhere...", size: 5220 },
+            { name: "display something beautiful", size: 3623 },
+            { name: "flex your muscles", size: 984 },
+            { name: "physics is religion", size: 6410 },
+            { name: "query and you get the answer", size: 2124 }
+        ]
+    };
 
-    var visualization = d3plus.viz()
-        .container("#tree-map") // container DIV to hold the visualization
-        .data(arr) // data to use with the visualization
-        .type("tree_map") // visualization type
-        .id(["group","name"]) // keys. 'group' coming first to make it cluster the squares with same cnae_1
-        .depth(1)
-        .size("value")
-        .color("color")
-        .draw()
+    genTreemap(tree,"tree-map",arr)
+
 }
 
 // data: variable declared on the top of this file populated in parser.js:readDatabases()

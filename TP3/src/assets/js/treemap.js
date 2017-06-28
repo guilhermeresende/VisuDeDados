@@ -4,48 +4,65 @@
 function genTreemap(tree,container,arr) {
 	console.log(arr);
 
-	var test = d3.nest()
-	  .key(function(d) { return d.group; })
-	  .entries(arr);
+	var canvas=d3.select("body").append("svg")
+		.attr("width",900)
+		.attr("height",400);
 
-  var root = d3.hierarchy(test)
-      .eachBefore(function(d) { d.data.id = (d.parent ? d.parent.data.id + "." : "") + d.data.name; })
-      .sum(sumBySize)
-      .sort(function(a, b) { return b.height - a.height || b.value - a.value; });
+	var tree={"name":"parent","color":"a","group":"aaaaa","value":0,"growth":0,"children":[]};
+	var indexnum=-1;
+	for(var i=0;i<arr.length;i++){
 
-	var width = innerWidth-40,
-	    height = innerHeight-40,
-	    color = d3.scale.category20c(),
-	    div = d3.select("body").append("div")
-	       .style("position", "relative");
+		found=0;
+		indexnum=tree["children"].length-1;
+		for (var j=0;j<tree["children"].length;j++){
+			if (tree["children"][j]["group"]==arr[i]["group"]){
+					indexnum=j;
+					found=1;
+					break;
+			}
+		}
+		if (!found){
+			tree["children"].push({"name":arr[i]["group"],"color":"a","group":arr[i]["group"],"value":0,"growth":0,"children":[]});
+			indexnum=tree["children"].length-1;
+		}
+	
+		tree["children"][indexnum]["children"].push(arr[i]);
+
+	}
+	
+	//console.log(tree)
+
 
 	var treemap = d3.layout.treemap()
-	    .size([width, height])
+	    .size([900,400])
 	    .sticky(true)
-	    .value(function(d) { return d.size; });
-	 
-	var node = div.datum(tree).selectAll(".node")
-	      .data(treemap.nodes)
-	    .enter().append("div")
-	      .attr("class", "node")
-	      .call(position)
-	      .style("background-color", function(d) {
-	          return d.name == 'tree' ? '#fff' : color(d.name); })
-	      .append('div')
-	      .style("font-size", function(d) {
-	          // compute font size based on sqrt(area)
-	          return Math.max(20, 0.18*Math.sqrt(d.area))+'px'; })
-	      .text(function(d) { return d.children ? null : d.name; });
+	    .nodes(tree);
 
-	console.log(tree)
+
+	console.log(treemap)
 	 
-	function position() {
-	  this.style("left", function(d) { return d.x + "px"; })
-	      .style("top", function(d) { return d.y + "px"; })
-	      .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
-	      .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
-	}
-}
+	var cells=canvas.selectAll(".cell")
+		.data(treemap)
+		.enter()
+		.append("g")
+		.attr("class","cell")
+
+	cells.append("rect")
+		.attr("x", function (d){return d.x;})
+		.attr("y", function(d) {return d.y;})
+		.attr("width", function(d){return d.dx;})
+		.attr("height", function(d) {return d.dy;})
+		.attr("fill", function(d){return d.children ? null : d.color;})
+		.attr("stroke","#fff")
+
+	cells.append("text")
+		.attr("x",function(d){return d.x+d.dx/2})
+		.attr("y",function(d){return d.y+d.dy/2})
+		.attr("text-anchor", "middle")
+		.text(function(d) {return d.children ? null : d.name;})
+
+	
+}/*
 
 
 <!DOCTYPE html>
@@ -153,3 +170,4 @@ function sumBySize(d) {
 }
 
 </script>
+*/
