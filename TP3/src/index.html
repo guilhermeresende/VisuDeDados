@@ -15,44 +15,76 @@
 	<script src="vendors/js/bootstrap.min.js"></script>
     <script src="assets/js/parser.js"></script>
     <script src="assets/js/plotter.js"></script>
-    
+    <script src="assets/js/treemap.js"></script>
+    <link href="assets/css/page_base.css" type="text/css" rel="stylesheet" />
     <style>
         h1 {
             text-align: center;
         }
-        #tree-map-container div {
-            height: 400px;
+
+        .bar-chart-container {
             width: 900px;
         }
+
         .chart div {
             font: 10px sans-serif;
             background-color: steelblue;
-            text-align: right;
+  
             padding: 3px;
             margin: 1px;
             color: white;
         }
     </style>
 </head>
-
 <body>
-    <div class="container-fluid">
-        <div>
-            <!-- data selection -->
-            <label class="radio-inline"><input type="radio" name="viz-type" value="num_emp">Empregos</label>
-            <label class="radio-inline"><input type="radio" name="viz-type" value="wage">Salário</label>
-            <button class="radio-inline" onclick="updateVisualization()">Gerar visualização</button>
+    
+        <div class="selection_type_div">
+            <div>
+                <!-- data selection -->
+                <label class="radio-inline"><input type="radio" name="viz-type" value="num_emp">Empregos</label>
+                <label class="radio-inline"><input type="radio" name="viz-type" value="wage">Salário</label>
+                <button class="radio-inline" onclick="updateVisualization()">Gerar visualização</button>
+            </div>
+        </div>
+        <div class="content">
+            <div class="tree_div">
+                        <h3>Distribuição</h3>
+                            <div id="tree-map"><svg></svg></div>
+
+
+            </div>
+            <div class="top_right">
+                    <h3>Maiores geradoras</h3>
+                    <div class="chart" id="greatest-chart"></div>
+
+                    <h3>Menores geradoras</h3>
+                    <div class="chart" id="smallest-chart"></div>
+
+            </div>
+        </div>
+        <div class="content">
+            <div class="top_block cresc_div">
+                <h3>Maiores crescimentos (%)</h3>
+                <div class="chart" id="growth-chart"></div>
+
+                <h3>Maiores quedas (%)</h3>
+                <div class="chart" id="decrease-chart"></div>
+            </div>
+
+            <div class="top_block foot_div">
+                <div class="content">
+                </div>
+            </div>
         </div>
 
-        <div class="chart" id="greatest-chart"></div><br>
-        <div class="chart" id="smallest-chart"></div>
-        <div id="tree-map-container">
-            <div id="tree-map"></div>
-        </div>
-    </div>
+</body>
+<body>
+   
     <script type="text/javascript">
-        initChart('chart-wrapper');
 
+        initChart('chart-wrapper');
+        initRadio();
+        
         // read datasets and draw visualizations right after.
         // defines that it will show employment info first (num_emp).
         // if you want to change that to wage info, pass 'wage' instead.
@@ -71,6 +103,15 @@
             // if has got to here, something is wrong
             console.log("erro ao atualizar a viz");
         }
+
+        function initRadio () {
+            var radio = document.getElementsByName("viz-type");
+            radio[0].checked = true;
+        }        
+        
+ 
+    
+    
     </script>
 </body>
 </html>
