@@ -1,10 +1,16 @@
 
 function genTreemap(tree,container,arr) {
+<<<<<<< HEAD
 	//console.log(arr);
 
 
 	//var canvas=d3.select("body").append("svg")
 	var canvas = d3.select("#tree-map").append("svg")
+=======
+	console.log(arr);
+
+	var canvas=d3.select("body").append("svg")
+>>>>>>> origin/master
 		.attr("width",900)
 		.attr("height",400);
 

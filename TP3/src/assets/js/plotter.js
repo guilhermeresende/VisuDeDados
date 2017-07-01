@@ -149,7 +149,10 @@ function drawGrowthChart (data, descending, wrapperId) {
 
 function drawTreeMap(arr){
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
     document.getElementById("tree-map").innerHTML = "";
 
 //   var visualization = d3plus.viz()
