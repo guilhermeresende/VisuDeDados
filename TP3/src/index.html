@@ -16,64 +16,81 @@
     <script src="assets/js/parser.js"></script>
     <script src="assets/js/plotter.js"></script>
     <script src="assets/js/treemap.js"></script>
+<<<<<<< HEAD
+    <link href="assets/css/page_base.css" type="text/css" rel="stylesheet" />
+=======
+>>>>>>> origin/master
     <style>
         h1 {
             text-align: center;
-        }
-        #tree-map-container div {
-            height: 400px;
-            width: 900px;
         }
 
         .bar-chart-container {
             width: 900px;
         }
 
+<<<<<<< HEAD
+=======
+        .bar-chart-container {
+            width: 900px;
+        }
+
+>>>>>>> origin/master
         .chart div {
             font: 10px sans-serif;
             background-color: steelblue;
-            text-align: right;
+  
             padding: 3px;
             margin: 1px;
             color: white;
         }
     </style>
 </head>
-
 <body>
-    <div class="container-fluid">
-        <div>
-            <!-- data selection -->
-            <label class="radio-inline"><input type="radio" name="viz-type" value="job_total">Empregos</label>
-            <label class="radio-inline"><input type="radio" name="viz-type" value="wage_total">Salário</label>
-            <select id="year-select">
-                <option>2010</option>
-                <option>2011</option>
-                <option>2012</option>
-                <option>2013</option>
-                <option selected>2014</option>
-            </select>
-            <button class="radio-inline" onclick="updateVisualization()">Gerar visualização</button>
+    <div class="selection_type_div">
+        <!-- data selection -->
+        <label class="radio-inline"><input type="radio" name="viz-type" value="job_total">Empregos</label>
+        <label class="radio-inline"><input type="radio" name="viz-type" value="wage_total">Salário</label>
+        <select id="year-select">
+            <option>2010</option>
+            <option>2011</option>
+            <option>2012</option>
+            <option>2013</option>
+            <option selected>2014</option>
+        </select>
+        <button class="radio-inline" onclick="updateVisualization()">Gerar visualização</button>
+    </div>
+    <div class="content">
+        <div class="tree_div">
+                    <h3>Distribuição</h3>
+                        <div id="tree-map"><svg></svg></div>
+
+
         </div>
+        <div class="top_right">
+                <h3>Maiores geradoras</h3>
+                <div class="chart" id="greatest-chart"></div>
 
-        <h3>Maiores geradoras</h3>
-        <div class="chart" id="greatest-chart"></div>
+                <h3>Menores geradoras</h3>
+                <div class="chart" id="smallest-chart"></div>
 
-        <h3>Menores geradoras</h3>
-        <div class="chart" id="smallest-chart"></div>
-
-        <h3>Maiores crescimentos (%)</h3>
-        <div class="chart" id="growth-chart"></div>
-
-        <h3>Maiores quedas (%)</h3>
-        <div class="chart" id="decrease-chart"></div>
-
-        <h3>Distribuição</h3>
-        <div id="tree-map-container">
-            <div id="tree-map"></div>
         </div>
     </div>
-   
+    <div class="content">
+        <div class="top_block cresc_div">
+            <h3>Maiores crescimentos (%)</h3>
+            <div class="chart" id="growth-chart"></div>
+
+            <h3>Maiores quedas (%)</h3>
+            <div class="chart" id="decrease-chart"></div>
+        </div>
+
+        <div class="top_block foot_div">
+            <div class="content">
+            </div>
+        </div>
+    </div>
+    
     <script type="text/javascript">
 
         initChart('chart-wrapper');
