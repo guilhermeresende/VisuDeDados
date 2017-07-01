@@ -85,26 +85,29 @@ function genTreemap(key, year, container) {
                 .style("opacity", 0);
         });
 
-    cells.append("text")
-        .attr("x",function(d){return d.x+d.dx/2})
-        .attr("y",function(d){return d.y+d.dy/2})
-        .attr("text-anchor", "middle")
-        .style("fill","white")
-        .style("font-weight","bold")        
-        .style('font-size',function(d){return textSize(d);})        
-        .text(function(d) {return d.children ? null : d.name;})
+	cells.append("text")
+		.attr("x",function(d){return d.x+d.dx/2})
+		.attr("y",function(d){return d.y+d.dy/1.85})
+		.attr("text-anchor", "middle")
+		.style("fill","white")
+		.style("font-weight","bold")
+		.style("font-family","calibri")	
+		.style('font-size',function(d){return textSize(d);})		
+		.text(function(d) {return d.children ? null : d.name;})
+
+	
 }
 
 
 function textSize(d){
-    if(d.dy<12){
-        return "0px"
-    }
-    if(d.dx<15){
-        return "0px"
-    }
-    if(d.area<1000){
-        return "0px"
-    }
-    return ((d.dx*0.7+d.dy*0.4)/(d.name.length*0.8)).toString()+"px";
+	if(d.dy<12){
+		return "0px"
+	}
+	if(d.dx<15){
+		return "0px"
+	}
+	if(d.area<1000){
+		return "0px"
+	}
+	return ((d.dx*0.9+d.dy*0.2)/(d.name.length*0.65)).toString()+"px";
 }
