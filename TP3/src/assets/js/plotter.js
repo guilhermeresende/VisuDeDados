@@ -16,12 +16,12 @@ var svgContainer,
 // objects are populated in parser.js:readDatasets()
 var activities = {};
 var occupations = {};
-var data;
+var data = {};
 
 function initChart (id) {
     setupSVG(id);
-    div = d3.select("body").append("div")	
-    .attr("class", "tooltip")				
+    div = d3.select("body").append("div")   
+    .attr("class", "tooltip")               
     .style("opacity", 0)
     .style("z-index",1890);
 }
@@ -123,7 +123,7 @@ function drawGrowthChart (data, descending, wrapperId) {
     drawBarChart(newData, descending, wrapperId);
 }
 
-
+/*
 function drawTreeMap(arr){
 
     document.getElementById("tree-map").innerHTML = "";
@@ -145,22 +145,30 @@ function drawTreeMap(arr){
     genTreemap(tree,"tree-map",arr)
 
 }
+*/
 
-// data: variable declared on the top of this file populated in parser.js:readDatabases()
-// key: defines if looking for 'num_emp' or 'wage'
-function drawPage(parsedFile, key){
-    if (data === undefined) {
-        data = parsedFile;
-    }
+function genTreeMapInput (key, year) {
+    var tree = {name:"root", children:[]};
+}
 
-    // if key wasnt defined, set it to num_emp,
+// key: defines if looking for 'job_total' or 'wage'
+function drawPage(key, year){
+
+    // if key wasnt defined, set it to job_total,
     // which will be the first visualization seen
     // when loading the screen for the first time
     if (key === undefined) {
-        key = 'num_emp';
+        key = 'job_total';
+    }
+
+    // information's year
+    if (year === undefined) {
+        year = 2014;
     }
     
-    var parsedData = {};
+    genTreemap(key, year, "#text-map"); return;
+    var quedaInput = genQuedaInput(key, year);
+    var crescInput = genCrescInput(key, year);
 
     // sums up all rows that have the same cnae_3 code
     for (var i = 0; i < data.length; i++) {

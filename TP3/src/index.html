@@ -44,8 +44,15 @@
     <div class="container-fluid">
         <div>
             <!-- data selection -->
-            <label class="radio-inline"><input type="radio" name="viz-type" value="num_emp">Empregos</label>
-            <label class="radio-inline"><input type="radio" name="viz-type" value="wage">Salário</label>
+            <label class="radio-inline"><input type="radio" name="viz-type" value="job_total">Empregos</label>
+            <label class="radio-inline"><input type="radio" name="viz-type" value="wage_total">Salário</label>
+            <select id="year-select">
+                <option>2010</option>
+                <option>2011</option>
+                <option>2012</option>
+                <option>2013</option>
+                <option selected>2014</option>
+            </select>
             <button class="radio-inline" onclick="updateVisualization()">Gerar visualização</button>
         </div>
 
@@ -80,24 +87,25 @@
         // iterates over radio buttons to see which one is checked.
         // having the checked button, calls function to draw visualizations again
         function updateVisualization () {
+            var key = "job_total";
             var radio = document.getElementsByName("viz-type");
             for (var i = 0; i < radio.length; i++) {
                 if (radio[i].checked) {
-                    drawPage(data, radio[i].value); return;
+                    key = radio[i].value;
                 }
             }
 
-            // if has got to here, something is wrong
-            console.log("erro ao atualizar a viz");
+            var select = document.getElementById("year-select");
+            var selected = select.selectedIndex;
+            var year = parseInt(select.options[selected].text);
+
+            drawPage(key, year);
         }
 
         function initRadio () {
             var radio = document.getElementsByName("viz-type");
             radio[0].checked = true;
         }        
-        
- 
-    
     
     </script>
 </body>
