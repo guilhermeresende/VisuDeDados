@@ -46,18 +46,19 @@ function genTreeData (key, year) {
 
 function genTreemap(key, year, container) {
     
+    console.log(data); console.log(key, year);
     document.getElementById(container).innerHTML = "";
-    var canvas = d3.select(container).append("svg")
+    var canvas = d3.select("#"+container).append("svg")
         .attr("width",900)
-        .attr("height",600);
+        .attr("height",400);
 
     var tree = genTreeData(key, year);  
     var treemap = d3.layout.treemap()
-        .size([900,600])
+        .size([900,400])
         .sticky(true)
         .nodes(tree);
 
-    var cells=canvas.selectAll(".cell")
+    var cells = canvas.selectAll(".cell")
         .data(treemap)
         .enter()
         .append("g")

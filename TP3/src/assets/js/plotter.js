@@ -51,31 +51,36 @@ function fieldSorter(fields) {
             }, 0);
     };
 }
+
 function drawLines(arr, data, wrapperId, names){
     var width = 420;
 
     document.getElementById(wrapperId).innerHTML = "";
 
     var x = d3.scale.linear()
-    .domain([0, d3.max(arr)])
-    .range([0, width]);
+    	.domain([0, d3.max(arr)])
+    	.range([0, width]);
 
 
-    d3.select("#" + wrapperId)
-    .selectAll("div")
-    .data(arr)
-    .enter().append("div")
-    .style("width", function(d) { return x(d) + "px"; })
-    .text(function(d, i) { return names[i] + " [" + d + "]"; });
+    var svgCont = d3.select("#" + wrapperId)
+        .selectAll("div")
+	.data(arr)
+	.enter().append("div")
+    	.style("height", "15px")
+	.style("margin-top", "20px")
+    	.style("width", function(d) { return x(d) + "px"; });
+    //.text(function(d, i) { return names[i] + " [" + d + "]"; });
 
 
-    var chart = d3.select("#" + wrapperId);
-    var bar = chart.selectAll("div");
-
-    var barUpdate = bar.data(arr);
-    var barEnter = barUpdate.enter().append("div");
-    barEnter.style("width", function(d) { return d * 10 + "px"; });
-    barEnter.text(function(d) { return d; });
+    svgCont.append("text").append("div")
+        .style("color", "black")
+    	.style("background-color", "transparent")
+    	.style("width", "150px")
+    	.style("position", "relative")
+    	.style("top", "-22px")
+    	.style("width", "500px")        
+    	.style("height", "15px")
+        .text(function(d, i) { return names[i] + " [" + d + "]"; });
 }
 
 function drawBarChart(data, descending, wrapperId){
@@ -147,11 +152,70 @@ function drawTreeMap(arr){
 }
 */
 
-function genTreeMapInput (key, year) {
-    var tree = {name:"root", children:[]};
+// returns a Js Object indexed by cnae_3_id.
+// the values are the info requested in a list.
+function genSparklineInput (key) {
+    var cnaes = {};
+    
+    var years = Object.keys(data);
+    years.sort();
+    
+    for (var y = 0; y < years.length; y++) {
+        var cnae_ids = Object.keys(data[years[y]]);
+        for (var c = 0; c < cnae_ids.length; c++) {
+            var id = cnae_ids[c];
+            var row = data[years[y]][id];
+            var value = parseFloat(row[key])/row["est_total"]; // average
+            if (cnaes[id] === undefined) {
+                cnaes[id] = [value];
+            } else {
+                cnaes[id].push(value);
+            }
+        }
+    }
+
+    return cnaes;
 }
 
-// key: defines if looking for 'job_total' or 'wage'
+// as we aggregate the row values, the fields *_growth_5 can't be used anymore.
+// therefore, this function needs to extract this info from the variable 'data'.
+// sometimes the previous year's info is not available. so we jsut ignore it.
+function genSortedBarsInput (key, year) {
+    var bars = [];
+    var cnae_keys = Object.keys(data[year]);
+    var past_year = year-1;
+    for (var i = 0; i < cnae_keys.length; i++) {
+        // if thre is no info on the previous year, continue
+        if (data[past_year] === undefined || data[past_year][cnae_keys[i]] === undefined) {
+            continue;
+        }
+
+        var previous = data[past_year][cnae_keys[i]];
+        var row = data[year][cnae_keys[i]];
+        bars.push({
+            name: row.cnae_3_name,
+            value: parseFloat(row[key])/row["est_total"],
+            color: row.color,
+            // current mean minus previous mean
+            growth: parseFloat(row[key])/row["est_total"] - parseFloat(previous[key])/previous["est_total"]
+        });
+    }
+    
+    bars.sort(function (a, b) {
+        if (a.value < b.value) {
+            return -1;
+        }
+        else if (a.value == b.value) {
+            if (a.name < b.name) return -1;
+            else return 1;
+        }
+        else return 1;
+    });
+
+    return bars;
+}
+
+// key: defines if looking for 'job_total' or 'wage_total'
 function drawPage(key, year){
 
     // if key wasnt defined, set it to job_total,
@@ -166,69 +230,26 @@ function drawPage(key, year){
         year = 2014;
     }
     
-    genTreemap(key, year, "#text-map"); return;
-    var quedaInput = genQuedaInput(key, year);
-    var crescInput = genCrescInput(key, year);
-
-    // sums up all rows that have the same cnae_3 code
-    for (var i = 0; i < data.length; i++) {
-        var id = data[i]['cnae_3'];
-        var group = data[i]['cnae_1'];
-        var name = activities[id].name;
-        var color = activities[id].color;
-        var growth = parseFloat(data[i][key+'_growth_5']);
-        var value = parseFloat(data[i][key]);
-        if (isNaN(value)) value = 0;
-        if (isNaN(growth)) growth = 0;
-        growth *= 100;
-        
-        if (parsedData[id] === undefined) {
-            parsedData[id] = {
-                value: value,
-                name: name,
-                group: group,
-                color: color,
-                growth: growth
-            }
-        } else {
-            parsedData[id].value += value;
-        }
-    }
-
-    // creating array to feed d3plus
-    var chartData = [];
-    var cnaeKeys = Object.keys(parsedData);
-    for (var i = 0; i < cnaeKeys.length; i++) {
-        chartData.push({
-            "value": parsedData[cnaeKeys[i]].value,
-            "name": parsedData[cnaeKeys[i]].name,
-            "group": parsedData[cnaeKeys[i]].group,
-            "color": parsedData[cnaeKeys[i]].color,
-            "growth": parsedData[cnaeKeys[i]].growth
-        });
-    }
-
-    // by value first, then by name
-    chartData.sort(function (a, b){
-        if (a.value < b.value) {
-            return -1;
-        }
-        else if (a.value == b.value) {
-            if (a.name < b.name) return -1;
-            else return 1;
-        }
-        else return 1;
-    });
+    // draws tree map about the info and year requested
+    genTreemap(key, year, "tree-map"); 
+    
+    // indexed by cnae_3. for each cnae_3, it has an array with values from each year,
+    // so we can plot a line chart with the growth pattern
+    var sparklineInput = genSparklineInput(key);
+    
+    // as we aggregate the row values, the fields *_growth_5 can't be used anymore.
+    // therefore, this function needs to extract this info from the variable 'data'.
+    // sometimes the previous year's info is not available. so we jsut ignore it.
+    var barsInput = genSortedBarsInput(key, year);
 
     // greatest values
-    drawBarChart(chartData, true, "greatest-chart");
+    drawBarChart(barsInput, true, "greatest-chart");
     // smallest values
-    drawBarChart(chartData, false, "smallest-chart");
-    drawTreeMap(chartData);
-
+    drawBarChart(barsInput, false, "smallest-chart");
+    
     // ordena por growth
-    filteredChartData = chartData.filter(function(item){return true});
-    filteredChartData.sort(function (a, b){
+    growthInput = barsInput.filter(function (item) {return true;});
+    growthInput.sort(function (a, b) {
         if (a.growth < b.growth) {
             return -1;
         }
@@ -240,8 +261,8 @@ function drawPage(key, year){
     });
 
     // growth
-    drawGrowthChart(filteredChartData, true, "growth-chart");
+    drawGrowthChart(growthInput, true, "growth-chart");
     // decrease
-    drawGrowthChart(filteredChartData, false, "decrease-chart");
+    drawGrowthChart(growthInput, false, "decrease-chart");
 
 }
