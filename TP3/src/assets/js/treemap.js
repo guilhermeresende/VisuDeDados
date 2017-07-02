@@ -50,12 +50,12 @@ function genTreemap(key, year, container) {
     document.getElementById(container).innerHTML = "";
     var canvas = d3.select("#"+container).append("svg")
         
-        .attr("width", "100%")
-        .attr("height","100%");
+        .attr("width", "900px")
+        .attr("height","520px");
 
     var tree = genTreeData(key, year);  
     var treemap = d3.layout.treemap()
-        .size([900,400])
+        .size([900,520])
         .sticky(true)
         .nodes(tree);
 
