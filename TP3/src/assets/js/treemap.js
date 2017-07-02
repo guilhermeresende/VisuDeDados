@@ -49,8 +49,9 @@ function genTreemap(key, year, container) {
     console.log(data); console.log(key, year);
     document.getElementById(container).innerHTML = "";
     var canvas = d3.select("#"+container).append("svg")
-        .attr("width",900)
-        .attr("height",400);
+        
+        .attr("width", "100%")
+        .attr("height","100%");
 
     var tree = genTreeData(key, year);  
     var treemap = d3.layout.treemap()

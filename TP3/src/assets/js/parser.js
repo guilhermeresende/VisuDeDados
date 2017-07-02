@@ -51,6 +51,7 @@ function readDatasets (callback, parameter) {
         data = {}; // essa variável é a declarada no arquivo plotter.js. loucura total.
         
         for (var i = 0; i < res.length; i++) {
+            if (res[i].cnae_3_color === undefined) { console.log(res[i]); }
             // coleção de dados tava bichada
             if (!res[i].cnae_3_color.startsWith('#')) {
                 res[i].color = res[i].cbo_id;

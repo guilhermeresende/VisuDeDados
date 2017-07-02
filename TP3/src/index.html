@@ -21,68 +21,95 @@
         h1 {
             text-align: center;
         }
-
-        .bar-chart-container {
-            width: 900px;
+        .panel-bodysss {
+            padding-bottom: 20px;
         }
-
-        .bar-chart-container {
-            width: 900px;
+        .bar-chart-containers {
+            width: 350px;
         }
 
         .chart div {
+            width: 10px;
             font: 10px sans-serif;
             background-color: steelblue;
+
   
             padding: 3px;
             margin: 1px;
             color: white;
         }
+
+        #year-select{
+            width:  120px;
+            float: left;
+        }
     </style>
 </head>
 <body>
+    <div class="panel panel-primary">
+    <div class="panel-heading">
     <div class="selection_type_div">
+
         <!-- data selection -->
         <label class="radio-inline"><input type="radio" name="viz-type" value="job_total">Empregos</label>
         <label class="radio-inline"><input type="radio" name="viz-type" value="wage_total">Salário</label>
-        <select id="year-select">
+        <select class="form-control" id="year-select">
             <option>2010</option>
             <option>2011</option>
             <option>2012</option>
             <option>2013</option>
             <option selected>2014</option>
         </select>
-        <button class="radio-inline" onclick="updateVisualization()">Gerar visualização</button>
+        <button class="radio-inline btn btn-info" onclick="updateVisualization()">Gerar visualização</button>
     </div>
+    </div>
+    <div class="panel-body">
     <div class="content">
-        <div class="tree_div">
-                    <h3>Distribuição</h3>
-                        <div id="tree-map"><svg></svg></div>
 
+        <div class="tree_div">
+       
+            sadsada<
+           <div id="tree-map"></div>
 
         </div>
         <div class="top_right">
-                <h3>Maiores geradoras</h3>
-                <div class="chart" id="greatest-chart"></div>
+            <div class="bar-chart-containers">
 
-                <h3>Menores geradoras</h3>
-                <div class="chart" id="smallest-chart"></div>
-
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Maiores geradoras</div>
+                    <div class="panel-body"><div class="chart" id="greatest-chart"></div></div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Menores geradoras</div>
+                    <div class="panel-body"><div class="chart" id="smallest-chart"></div></div>
+                </div>
+            </div>
+        </div>
+            
+            
         </div>
     </div>
     <div class="content">
-        <div class="top_block cresc_div">
-            <h3>Maiores crescimentos</h3>
-            <div class="chart" id="growth-chart"></div>
-
-            <h3>Maiores quedas</h3>
-            <div class="chart" id="decrease-chart"></div>
-        </div>
-
-        <div class="top_block foot_div">
-            <div class="content">
+        <div class="bot_left">
+        <div class="bar-chart-containers">
+            <div class="panel panel-primary">            
+                <div class="panel-heading"><h3>Maiores crescimentos</h3></div>
+                <div class="panel-body"><div class="chart" id="growth-chart"></div></div>
             </div>
         </div>
+        </div>
+        <div class="bot_right"> 
+        <div class="bar-chart-containers">       
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h3>Maiores quedas</h3></div>
+                <div class="panel-body"><div class="chart" id="decrease-chart"></div></div>
+            </div>
+        </div>
+        </div>
+    </div>
+        <div class="foot_div">
+            
+    </div>
     </div>
     
     <script type="text/javascript">

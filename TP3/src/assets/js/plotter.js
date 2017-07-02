@@ -53,7 +53,7 @@ function fieldSorter(fields) {
 }
 
 function drawLines(arr, data, wrapperId, names){
-    var width = 420;
+    var width = 300;
 
     document.getElementById(wrapperId).innerHTML = "";
 
@@ -68,17 +68,16 @@ function drawLines(arr, data, wrapperId, names){
 	.enter().append("div")
     	.style("height", "15px")
 	.style("margin-top", "20px")
-    	.style("width", function(d) { return x(d) + "px"; });
+    .style("width", function(d) { return x(d) + "px"; });
     //.text(function(d, i) { return names[i] + " [" + d + "]"; });
 
 
     svgCont.append("text").append("div")
         .style("color", "black")
     	.style("background-color", "transparent")
-    	.style("width", "150px")
+    	.style("width", "230px")
     	.style("position", "relative")
-    	.style("top", "-22px")
-    	.style("width", "500px")        
+    	.style("top", "-22px")      
     	.style("height", "15px")
         .text(function(d, i) { return names[i] + " [" + d + "]"; });
 }
