@@ -21,19 +21,28 @@
         h1 {
             text-align: center;
         }
+        .panel-primary2{
+            height: 100px;
+        }
         .panel-bodysss {
             padding-bottom: 20px;
         }
         .bar-chart-containers {
             width: 350px;
         }
+        .bar-chart-containersBot {
+            margin-top: -15px;
+            width: 350px;
+        }
+        .bar-chart-containersSpark {
+            margin-top: -15px;
+            width: 530px;
+        }
 
         .chart div {
             width: 10px;
             font: 10px sans-serif;
             background-color: steelblue;
-
-  
             padding: 3px;
             margin: 1px;
             color: white;
@@ -47,14 +56,13 @@
 </head>
 <body>
     <div class="panel panel-primary">
-    <div class="panel-heading">
+    <div class="panel-heading"><div class="header_div"><h4>Informaçôes sobre Setores Econômicos de BH</h4></div>
     <div class="selection_type_div">
 
         <!-- data selection -->
         <label class="radio-inline"><input type="radio" name="viz-type" value="job_total">Empregos</label>
         <label class="radio-inline"><input type="radio" name="viz-type" value="wage_total">Salário</label>
         <select class="form-control" id="year-select">
-            <option>2010</option>
             <option>2011</option>
             <option>2012</option>
             <option>2013</option>
@@ -90,23 +98,37 @@
     </div>
     <div class="content">
         <div class="bot_left">
-        <div class="bar-chart-containers">
+        <div class="bar-chart-containersBot">
             <div class="panel panel-primary">            
-                <div class="panel-heading"><h322>Maiores crescimentos</h322></div>
+                <div class="panel-heading"><h322>Maiores crescimentos (%)</h322></div>
                 <div class="panel-body"><div class="chart" id="growth-chart"></div></div>
             </div>
         </div>
         </div>
+
         <div class="bot_right"> 
-        <div class="bar-chart-containers">       
+        <div class="bar-chart-containersBot">       
             <div class="panel panel-primary">
-                <div class="panel-heading"><h322>Maiores quedas</h322></div>
+                <div class="panel-heading"><h322>Maiores quedas (%)</h322></div>
                 <div class="panel-body"><div class="chart" id="decrease-chart"></div></div>
             </div>
         </div>
         </div>
+        <!-- APAGUE APARTIR DAQUI SE N TIVER SPARKS -->
+        <div class="bot_right_most"> 
+        <div class="bar-chart-containersSpark">       
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h322>SE TIVER SPARKS RSRS</h322></div>
+                <div class="panel-body">adsadasd </div>
+            </div>
+        </div>
+        </div>
+        <!-- SO ATE AQUI VLW -->
     </div>
-        <div class="foot_div">
+        <div class="foot_div panel-heading">
+        <h4>Projeto Final - Visualização de Dados</h4>
+        <h5>Francisco H. M. B. Lima, Gabriel M. Pedrosa, Guilherme R. Borges, Pedro Henrique Nascimento</h5>
+
             
     </div>
     </div>

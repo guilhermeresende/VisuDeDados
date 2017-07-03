@@ -75,7 +75,7 @@ function drawLines(arr, data, wrapperId, names){
     svgCont.append("text").append("div")
         .style("color", "black")
     	.style("background-color", "transparent")
-    	.style("width", "230px")
+    	.style("width", "330px")
     	.style("position", "relative")
     	.style("top", "-22px")      
     	.style("height", "15px")

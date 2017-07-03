@@ -16,7 +16,7 @@ html, body {
 }
 .content {
 	display: flexz;
-	height: 500px;
+	height: 280px;
 }
 
 .tree_div {
@@ -32,33 +32,55 @@ html, body {
 }
 
 .bot_left {
-	width: 400px;
 	height: 200px;
 	float: left; 
 	margin-left: 18px;
 }
 
 .bot_right {
+
 	position: relative;
 	float: left;
 	flex-grow: 1;
+	margin-left: 18px;
+}
+.bot_right_most {
+	position: relative;
+	float: left;
+	flex-grow: 1;
+	margin-left: 18px;
+
+}
+
+.header_div {
+	float: left;
+	height: 1px;
 }
 .selection_type_div {
-	width: 100%;
-	height: 50px;
+	margin-left: 573px;
+	width: 600px;
 }
-
-
-
+.selection_type_div input{
+    margin-right: 20px;
+	margin-left: 20px;
+}
+.selection_type_div select{
+    margin-right: 20px;
+	margin-left: 20px;
+}
+.selection_type_div button{
+    margin-right: 20px;
+	margin-left: 20px;
+}
 .cresc_div {
 	width: 500px;
 	height: 250px;
-	background-color: #999966;
 }
 
 .foot_div {
+	text-align: right;
 	width: 100%;
-	height: 70px;
-	background-color: #993399;
+	height: 80px;
+    background-color: steelblue;
 }
 
