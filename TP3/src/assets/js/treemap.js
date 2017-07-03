@@ -33,6 +33,7 @@ function genTreeData (key, year) {
         }
         for (var j = 0; j < dataByGroups[group].length; j++) {
             groupNode.children.push({
+                id: dataByGroups[group][j].cnae_3_id,
                 name: dataByGroups[group][j].cnae_3_name,
                 value: parseFloat(dataByGroups[group][j][key])/dataByGroups[group][j]['est_total'],
                 color: dataByGroups[group][j].color,
@@ -46,7 +47,7 @@ function genTreeData (key, year) {
 
 function genTreemap(key, year, container) {
     
-    console.log(data); console.log(key, year);
+    // console.log(data); console.log(key, year);
     document.getElementById(container).innerHTML = "";
     var canvas = d3.select("#"+container).append("svg")
         
@@ -76,11 +77,13 @@ function genTreemap(key, year, container) {
             div.transition()        
                 .duration(200)      
                 .style("opacity", .9);      
-            div.html("<b>"+d.name+"</b> <br> <b>Valor:</b>&#09;"+d.value+" <br> <b>Grupo:</b>&#09;"+d.group.toUpperCase())  
+            div.html("<b>"+d.name+"</b> <br> <b>Valor:</b>&#09;"+d.value+" <br> <b>Grupo:</b>&#09;"+d.group.toUpperCase())
                 .style("left", (d3.event.pageX) + "px")     
                 .style("top", (d3.event.pageY - 28) + "px");    
+            drawDetailsLineChart(d.id, d.name);
         })                  
         .on("mouseout", function(d) {       
+            hideDetailsLineChart();
             div.transition()        
                 .duration(500)      
                 .style("opacity", 0);
@@ -98,7 +101,6 @@ function genTreemap(key, year, container) {
 
 	
 }
-
 
 function textSize(d){
 	if(d.dy<12){

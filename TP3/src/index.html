@@ -13,6 +13,7 @@
     <script src="vendors/js/d3plus.js"></script>
     <script src="vendors/js/jquery-3.2.1.min.js"></script>
 	<script src="vendors/js/bootstrap.min.js"></script>
+    <script src="assets/js/sparkline.js"></script>
     <script src="assets/js/parser.js"></script>
     <script src="assets/js/plotter.js"></script>
     <script src="assets/js/treemap.js"></script>
@@ -45,12 +46,26 @@
             background-color: steelblue;
             padding: 3px;
             margin: 1px;
-            color: white;
+            color: black;
         }
 
         #year-select{
             width:  120px;
             float: left;
+        }
+
+        path { 
+            stroke: steelblue;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: grey;
+            stroke-width: 1;
+            shape-rendering: crispEdges;
         }
     </style>
 </head>
@@ -100,7 +115,7 @@
         <div class="bot_left">
         <div class="bar-chart-containersBot">
             <div class="panel panel-primary">            
-                <div class="panel-heading"><h322>Maiores crescimentos (%)</h322></div>
+                <div class="panel-heading"><h322>Maiores crescimentos</h322></div>
                 <div class="panel-body"><div class="chart" id="growth-chart"></div></div>
             </div>
         </div>
@@ -109,17 +124,21 @@
         <div class="bot_right"> 
         <div class="bar-chart-containersBot">       
             <div class="panel panel-primary">
-                <div class="panel-heading"><h322>Maiores quedas (%)</h322></div>
+                <div class="panel-heading"><h322>Maiores quedas</h322></div>
                 <div class="panel-body"><div class="chart" id="decrease-chart"></div></div>
             </div>
         </div>
         </div>
         <!-- APAGUE APARTIR DAQUI SE N TIVER SPARKS -->
-        <div class="bot_right_most"> 
+        <div id="details-container" class="bot_right_most" style="opacity:0;">
         <div class="bar-chart-containersSpark">       
             <div class="panel panel-primary">
-                <div class="panel-heading"><h322>SE TIVER SPARKS RSRS</h322></div>
-                <div class="panel-body">adsadasd </div>
+                <div class="panel-heading" id="details-name"><h322>Padrão de crescimento</h322></div>
+                <div class="panel-body" style="padding-top:35px;">
+                    <div class="chart" style="padding-left:20px;">
+                        <svg id="details-chart" height="150" width="400"></div>
+                    </div>
+                </div>
             </div>
         </div>
         </div>

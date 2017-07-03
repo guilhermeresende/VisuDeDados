@@ -17,11 +17,13 @@ var svgContainer,
 var activities = {};
 var occupations = {};
 var data = {};
+var sparklineInput = {};
 
 function initChart (id) {
     setupSVG(id);
     div = d3.select("body").append("div")   
-    .attr("class", "tooltip")               
+    .attr("class", "tooltip")
+    .attr("id", "tooltip")
     .style("opacity", 0)
     .style("z-index",1890);
 }
@@ -52,7 +54,63 @@ function fieldSorter(fields) {
     };
 }
 
-function drawLines(arr, data, wrapperId, names){
+function hideDetailsLineChart () {
+    document.getElementById("details-container").style.opacity = "0";
+    document.getElementById("details-chart").innerHTML = "";
+}
+
+function drawDetailsLineChart (id, name) {
+    document.getElementById("details-container").style.opacity = "1";
+    document.getElementById("details-name").innerHTML = "Padrão de crescimento: " + name;
+
+    var newData = [];
+    var max = Math.max(...sparklineInput[id]);
+    for (var i = 0; i < sparklineInput[id].length; i++) {
+        newData.push({
+            id: i,
+            value: sparklineInput[id][i]
+        });
+    }
+
+    var svg = d3.select("#details-chart"),
+        margin = {top: 0, right: 0, bottom: 0, left: 0},
+        width = +svg.attr("width") - margin.left - margin.right,
+        height = +svg.attr("height") - margin.top - margin.bottom,
+        g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var x = d3.scale.linear().domain([0, 6]).range([0, 500]);
+    var y = d3.scale.linear().domain([0, max]).range([0, 100]);
+
+    var line = d3.svg.line()
+        .x(function(d) { return x(d.id); })
+        .y(function(d) { return y(d.value); });
+
+    x.domain(d3.extent(newData, function(d) { return d.id; }));
+    y.domain(d3.extent(newData, function(d) { return d.value; }));
+
+    g.append("svg:path").attr("d", line(newData));
+
+    /*
+    g.append("g")
+        .call(d3.axisLeft(y))
+        .append("text")
+        .attr("fill", "#000")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", "0.71em");
+
+    g.append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
+        .attr("stroke-width", 1.5)
+        .attr("d", line);
+    */
+}
+
+function drawLines(arr, data, wrapperId, names, ids){
     var width = 300;
 
     document.getElementById(wrapperId).innerHTML = "";
@@ -69,8 +127,6 @@ function drawLines(arr, data, wrapperId, names){
     	.style("height", "15px")
 	.style("margin-top", "20px")
     .style("width", function(d) { return x(d) + "px"; });
-    //.text(function(d, i) { return names[i] + " [" + d + "]"; });
-
 
     svgCont.append("text").append("div")
         .style("color", "black")
@@ -80,17 +136,28 @@ function drawLines(arr, data, wrapperId, names){
     	.style("top", "-22px")      
     	.style("height", "15px")
         .text(function(d, i) { return names[i] + " [" + d + "]"; });
+
+
+    svgCont
+    .on("mouseover", function(d, i) {
+        drawDetailsLineChart(ids[i], names[i]);
+    })                  
+    .on("mouseout", function(d) {
+        hideDetailsLineChart();
+    });
 }
 
 function drawBarChart(data, descending, wrapperId){
     var arr = new Array();// = [4, 8, 15, 16, 23, 42];
     var names = new Array();
+    var ids = new Array();
 
     if(descending){
         aval = MAX_CHARTS;
         for (i = data.length-1; i > 0; i--){
             arr.push( parseInt(data[i]['value']) );
             names.push( data[i]['name']);
+            ids.push(data[i]['id']);
             aval--;
             if(aval == 0)
                     i = 0;
@@ -105,6 +172,7 @@ function drawBarChart(data, descending, wrapperId){
                 //console.log(data[i]['value']);
                 arr.push( Math.abs(parseInt(data[i]['value'])) );
                 names.push( data[i]['name']);
+                ids.push(data[i]['id']);
             }
             if(aval == 0)
                 i = data.length;
@@ -113,7 +181,7 @@ function drawBarChart(data, descending, wrapperId){
 
     //console.log(arr);    
 
-    drawLines(arr, data, wrapperId, names);
+    drawLines(arr, data, wrapperId, names, ids);
 }
 
 function drawGrowthChart (data, descending, wrapperId) {
@@ -121,7 +189,8 @@ function drawGrowthChart (data, descending, wrapperId) {
     for (var i = 0; i < data.length; i++) {
         newData.push({
             value: data[i].growth,
-            name: data[i].name
+            name: data[i].name,
+            id: data[i].id
         });
     }
     drawBarChart(newData, descending, wrapperId);
@@ -130,10 +199,6 @@ function drawGrowthChart (data, descending, wrapperId) {
 /*
 function drawTreeMap(arr){
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
     document.getElementById("tree-map").innerHTML = "";
 
 //   var visualization = d3plus.viz()
@@ -199,6 +264,7 @@ function genSortedBarsInput (key, year) {
             name: row.cnae_3_name,
             value: parseFloat(row[key])/row["est_total"],
             color: row.color,
+            id: row.cnae_3_id,
             // current mean minus previous mean
             growth: parseFloat(row[key])/row["est_total"] - parseFloat(previous[key])/previous["est_total"]
         });
@@ -238,7 +304,7 @@ function drawPage(key, year){
     
     // indexed by cnae_3. for each cnae_3, it has an array with values from each year,
     // so we can plot a line chart with the growth pattern
-    var sparklineInput = genSparklineInput(key);
+    sparklineInput = genSparklineInput(key);
     
     // as we aggregate the row values, the fields *_growth_5 can't be used anymore.
     // therefore, this function needs to extract this info from the variable 'data'.
