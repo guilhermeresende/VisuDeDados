@@ -112,5 +112,5 @@ function textSize(d){
 	if(d.area<1000){
 		return "0px"
 	}
-	return ((d.dx*0.9+d.dy*0.2)/(d.name.length*0.65)).toString()+"px";
+	return ((d.dx*0.95+d.dy*0.05)/(d.name.length*0.75)).toString()+"px";
 }
